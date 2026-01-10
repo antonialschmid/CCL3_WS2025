@@ -1,0 +1,175 @@
+/* -----------------------------
+   GLOBAL RESET
+------------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* -----------------------------
+   VARIABLES
+------------------------------ */
+:root {
+  --text-main: #2f3a34;
+  --text-soft: #6b7a72;
+  --border-main: rgba(0, 0, 0, 0.35);
+  --box-bg: rgba(255, 255, 255, 0.95);
+}
+
+/* -----------------------------
+   BODY – PASTEL GRADIENT BACKGROUND
+------------------------------ */
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 60px 20px;
+
+  background: linear-gradient(
+    180deg,
+    #dfeee6 0%,   /* soft pastel green */
+    #e7f1f0 40%,
+    #e3eef6 100%  /* soft pastel blue */
+  );
+}
+
+/* -----------------------------
+   NAVIGATION
+------------------------------ */
+.navbar {
+  max-width: 900px;
+  margin: 0 auto 60px auto;
+  padding: 14px 24px;
+
+  background-color: var(--box-bg);
+  border: 1px solid var(--border-main);
+  border-radius: 1px;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.nav-list a:hover {
+  color: var(--text-main);
+}
+
+/* -----------------------------
+   HEADER
+------------------------------ */
+.header {
+  max-width: 900px;
+  margin: 0 auto 90px auto;
+  padding: 50px 40px;
+  text-align: center;
+
+  background-color: var(--box-bg);
+  border: 1px solid var(--border-main);
+  border-radius: 1px;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-soft);
+}
+
+/* -----------------------------
+   CONTENT SECTIONS (BOXES)
+------------------------------ */
+.section {
+  max-width: 900px;
+  margin: 0 auto 80px auto;
+  padding: 40px;
+
+  background-color: var(--box-bg);
+  border: 1px solid var(--border-main);
+  border-radius: 1px;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.section p {
+  font-size: 1rem;
+  color: var(--text-soft);
+  margin-bottom: 14px;
+  max-width: 720px;
+}
+
+/* -----------------------------
+   LISTS
+------------------------------ */
+.section ul {
+  margin-left: 20px;
+  color: var(--text-soft);
+}
+
+.section li {
+  margin-bottom: 8px;
+}
+
+/* -----------------------------
+   IMAGES INSIDE CONTENT
+------------------------------ */
+.responsive-img {
+  width: 100%;
+  max-width: 600px;
+  margin: 24px 0;
+
+  border: 1px solid var(--border-main);
+  border-radius: 1px;
+  display: block;
+}
+
+/* -----------------------------
+   FOOTER
+------------------------------ */
+.footer {
+  max-width: 900px;
+  margin: 100px auto 0 auto;
+  padding: 30px;
+
+  background-color: var(--box-bg);
+  border: 1px solid var(--border-main);
+  border-radius: 1px;
+
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+/* -----------------------------
+   RESPONSIVE
+------------------------------ */
+@media (max-width: 768px) {
+  body {
+    padding: 40px 14px;
+  }
+
+  .header h1 {
+    font-size: 2.2rem;
+  }
+
+  .section {
+    padding: 28px;
+  }
+}

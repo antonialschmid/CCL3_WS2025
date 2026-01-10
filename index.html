@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gratitude Garden – Project Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <ul class="nav-list">
+        <li><a href="#concept">Concept</a></li>
+        <li><a href="#idea">Idea & Motivation</a></li>
+        <li><a href="#implementation">Implementation</a></li>
+        <li><a href="#visuals">Visuals</a></li>
+        <li><a href="#structure">App Structure</a></li>
+        <li><a href="#tech">Technical Overview</a></li>
+    </ul>
+</nav>
+
+<!-- Header -->
+<header class="header">
+    <h1>Gratitude Garden</h1>
+    <p class="subtitle">Creative Coding Lab 3 – Winter Semester 2025</p>
+</header>
+
+<!-- Concept Section -->
+<section id="concept" class="section">
+    <h2>Concept</h2>
+    <p>
+        Gratitude Garden is a wellbeing-focused Android app that explores
+        gratitude journaling in a calm and low-pressure way. The project was
+        developed as part of Creative Coding Lab 3 and uses a single plant as
+        a visual metaphor for emotional growth and reflection.
+    </p>
+
+    <p>
+        Many existing gratitude apps rely heavily on text, statistics, or
+        streak-based systems, which can feel repetitive or stressful for
+        users. Gratitude Garden takes a different approach by visualising
+        progress through the gradual growth of one plant, without creating
+        competition or performance pressure.
+    </p>
+
+    <p>
+        Each gratitude entry contributes to the plant’s development, moving
+        through predefined growth stages over time. The focus of the app is
+        not productivity, but mindful reflection and emotional awareness.
+        The plant serves as a gentle companion that represents the user’s
+        personal gratitude journey.
+    </p>
+</section>
+
+<!-- Idea & Motivation -->
+<section id="idea" class="section">
+    <h2>Idea &amp; Motivation</h2>
+    <p>
+        Many people struggle to maintain a regular gratitude journaling habit.
+        Existing solutions often feel rigid or competitive. Gratitude Garden
+        was created to allow reflection without pressure, using simple
+        visual evolution.
+    </p>
+    <p>
+        By visualising emotional progress as plant growth, the app supports
+        emotional wellbeing rather than productivity tracking. This concept
+        encourages users to reflect in a calm and aesthetic way.
+    </p>
+</section>
+
+<!-- Implementation -->
+<section id="implementation" class="section">
+    <h2>Implementation</h2>
+    <p>
+        The app is built for the Android platform using Kotlin and follows
+        the MVVM architecture pattern. Data is stored locally via Room
+        (SQLite) to ensure privacy and usability without internet access.
+    </p>
+    <p>
+        The interface consists of a garden view with one central plant,
+        a screen to add daily entries, and a calendar view showing past
+        contributions.
+    </p>
+</section>
+
+<!-- Visuals -->
+<section id="visuals" class="section">
+    <h2>Visuals</h2>
+    <p>
+        Visual material showing sketches and screenshots related to the project.
+    </p>
+    <img src="images/sketch1.png" alt="Sketch 1" class="responsive-img">
+    <img src="images/screenshot1.png" alt="App Screenshot" class="responsive-img">
+</section>
+
+<!-- App Structure -->
+<section id="structure" class="section">
+    <h2>App Structure</h2>
+    <ul>
+        <li>Garden (Home Screen)</li>
+        <li>Add Entry</li>
+        <li>History / Calendar</li>
+        <li>Entry Detail</li>
+        <li>Stats / Settings</li>
+    </ul>
+    <p>
+        Navigation is simple, using a bottom navigation bar to reduce cognitive
+        load and support a calm user experience.
+    </p>
+</section>
+
+<!-- Technical Overview -->
+<section id="tech" class="section">
+    <h2>Technical Overview</h2>
+    <p>
+        The project is implemented using Kotlin (Android) with an MVVM
+        architecture, Room for local persistence, and a focus on offline-first
+        usability.
+    </p>
+    <p>
+        Data such as entries and plant stage are stored locally, preserving
+        privacy and enabling use without an internet connection.
+    </p>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>Antonia Schmid ∙ Kathrin Buchberger ∙ CCL3 WS2025</p>
+</footer>
+
+</body>
+
+</html>
