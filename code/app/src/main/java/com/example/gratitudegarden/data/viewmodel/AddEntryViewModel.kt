@@ -4,11 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gratitudegarden.data.model.GratitudeEntry
 import com.example.gratitudegarden.data.repository.GratitudeRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AddEntryViewModel(
     private val repository: GratitudeRepository
 ) : ViewModel() {
+
+    val entries = repository.getEntries()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
     fun saveEntry(text: String, mood: String) {
         val entry = GratitudeEntry(
