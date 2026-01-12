@@ -7,41 +7,53 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.composable
+import com.example.gratitudegarden.screen.GardenScreen
+import com.example.gratitudegarden.screen.AddEntryScreen
 import com.example.gratitudegarden.ui.theme.GratitudeGardenTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             GratitudeGardenTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun AppNavigation() {
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GratitudeGardenTheme {
-        Greeting("Android")
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+
+        NavHost(
+            navController = navController,
+            startDestination = "garden",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+
+            composable("garden") {
+                GardenScreen(navController)
+            }
+
+            composable("addEntry") {
+                AddEntryScreen(
+                    navController = navController,
+                    viewModel = TODO("Add ViewModel wiring next")
+                )
+            }
+        }
     }
 }
