@@ -7,8 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEntryScreen(
     navController: NavController,
@@ -17,52 +23,72 @@ fun AddEntryScreen(
     var text by remember { mutableStateOf("") }
     var selectedMood by remember { mutableStateOf("Peaceful") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Add Entry") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
 
-        Text(
-            text = "Add Entry",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)   // 👈 THIS LINE WAS MISSING
+                .padding(24.dp)
+        ) {
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Add Entry",
+                style = MaterialTheme.typography.headlineMedium
+            )
 
-        OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
-            placeholder = { Text("I am thankful for...") },
-            modifier = Modifier.fillMaxWidth()
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                placeholder = { Text("I am thankful for...") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Text("How do you feel today?")
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row {
-            listOf("Happy", "Peaceful", "Grateful", "Hopeful").forEach { mood ->
-                Button(
-                    onClick = { selectedMood = mood },
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Text(mood)
+            Text("How do you feel today?")
+
+            Row {
+                listOf("Happy", "Peaceful", "Grateful", "Hopeful").forEach { mood ->
+                    Button(
+                        onClick = { selectedMood = mood },
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Text(mood)
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
-            onClick = {
-                viewModel.saveEntry(text, selectedMood)
-                navController.popBackStack()
-            },
-            enabled = text.isNotBlank(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Save entry")
+            Button(
+                onClick = {
+                    viewModel.saveEntry(text, selectedMood)
+                    navController.popBackStack()
+                },
+                enabled = text.isNotBlank(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Save entry")
+            }
         }
     }
 }
