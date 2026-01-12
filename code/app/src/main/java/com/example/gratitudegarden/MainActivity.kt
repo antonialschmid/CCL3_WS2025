@@ -23,6 +23,7 @@ import com.example.gratitudegarden.data.viewmodel.AddEntryViewModelFactory
 import com.example.gratitudegarden.db.AppDatabase
 import com.example.gratitudegarden.screen.DetailEntryScreen
 import com.example.gratitudegarden.screen.HistoryScreen
+import com.example.gratitudegarden.screen.SettingsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +95,9 @@ fun AppNavigation() {
                 )
             }
 
-
+            composable("settings") {
+                SettingsScreen(navController)
+            }
         }
     }
 }
