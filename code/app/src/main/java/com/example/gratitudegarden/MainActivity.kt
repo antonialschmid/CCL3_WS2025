@@ -21,6 +21,7 @@ import com.example.gratitudegarden.data.repository.GratitudeRepository
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModelFactory
 import com.example.gratitudegarden.db.AppDatabase
+import com.example.gratitudegarden.navigation.BottomNavBar
 import com.example.gratitudegarden.screen.DetailEntryScreen
 import com.example.gratitudegarden.screen.HistoryScreen
 import com.example.gratitudegarden.screen.SettingsScreen
@@ -52,10 +53,13 @@ fun AppNavigation() {
     val test: AddEntryViewModel = viewModel(factory = factory)
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomNavBar(navController)
+        }
     ) { innerPadding ->
 
-        NavHost(
+    NavHost(
             navController = navController,
             startDestination = "garden",
             modifier = Modifier.padding(innerPadding)
@@ -94,9 +98,8 @@ fun AppNavigation() {
                     entryId = entryId
                 )
             }
-
             composable("settings") {
-                SettingsScreen(navController)
+                SettingsScreen(navController = navController)
             }
         }
     }

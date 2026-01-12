@@ -70,6 +70,12 @@ fun GardenScreen(
         ) {
             Text("View history")
         }
+        Spacer(modifier = Modifier.height(12.dp))
 
+        OutlinedButton(
+            onClick = { navController.navigate("settings") }
+        ) {
+            Text("Settings")
+        }
     }
 }
