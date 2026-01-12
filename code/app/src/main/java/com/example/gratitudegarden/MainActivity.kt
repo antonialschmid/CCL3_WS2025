@@ -21,6 +21,7 @@ import com.example.gratitudegarden.data.repository.GratitudeRepository
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModelFactory
 import com.example.gratitudegarden.db.AppDatabase
+import com.example.gratitudegarden.screen.DetailEntryScreen
 import com.example.gratitudegarden.screen.HistoryScreen
 
 class MainActivity : ComponentActivity() {
@@ -39,23 +40,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
-    // Context
     val context = LocalContext.current
-
-    // Database
     val database = AppDatabase.getDatabase(context)
-
-    // DAO
     val dao = database.gratitudeDao()
-
-    // Repository
     val repository = GratitudeRepository(dao)
-
-    // ViewModel Factory
     val factory = AddEntryViewModelFactory(repository)
-
-    // ViewModel (THIS was missing)
     val addEntryViewModel: AddEntryViewModel =
         viewModel(factory = factory)
 
@@ -91,6 +80,20 @@ fun AppNavigation() {
                     viewModel = addEntryViewModel
                 )
             }
+            composable(
+                route = "detail/{entryId}"
+            ) { backStackEntry ->
+                val entryId = backStackEntry.arguments
+                    ?.getString("entryId")
+                    ?.toInt() ?: return@composable
+
+                DetailEntryScreen(
+                    navController = navController,
+                    viewModel = addEntryViewModel,
+                    entryId = entryId
+                )
+            }
+
 
         }
     }

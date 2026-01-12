@@ -30,4 +30,19 @@ class AddEntryViewModel(
             repository.addEntry(entry)
         }
     }
+    suspend fun getEntryById(id: Int): GratitudeEntry? {
+        return repository.getEntryById(id)
+    }
+
+    fun updateEntry(entry: GratitudeEntry) {
+        viewModelScope.launch {
+            repository.updateEntry(entry)
+        }
+    }
+
+    fun deleteEntry(entry: GratitudeEntry) {
+        viewModelScope.launch {
+            repository.deleteEntry(entry)
+        }
+    }
 }

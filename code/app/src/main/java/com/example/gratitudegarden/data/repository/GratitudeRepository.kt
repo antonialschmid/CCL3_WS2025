@@ -12,4 +12,16 @@ class GratitudeRepository(
     }
 
     fun getEntries() = dao.getAllEntries()
+
+    suspend fun getEntryById(id: Int): GratitudeEntry? {
+        return dao.getEntryById(id)
+    }
+
+    suspend fun updateEntry(entry: GratitudeEntry) {
+        dao.updateEntry(entry)
+    }
+
+    suspend fun deleteEntry(entry: GratitudeEntry) {
+        dao.deleteEntry(entry)
+    }
 }
