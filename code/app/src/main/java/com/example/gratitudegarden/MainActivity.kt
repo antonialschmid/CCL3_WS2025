@@ -21,6 +21,7 @@ import com.example.gratitudegarden.data.repository.GratitudeRepository
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModelFactory
 import com.example.gratitudegarden.db.AppDatabase
+import com.example.gratitudegarden.screen.HistoryScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +84,14 @@ fun AppNavigation() {
                     viewModel = addEntryViewModel
                 )
             }
+
+            composable("history") {
+                HistoryScreen(
+                    navController = navController,
+                    viewModel = addEntryViewModel
+                )
+            }
+
         }
     }
 }
