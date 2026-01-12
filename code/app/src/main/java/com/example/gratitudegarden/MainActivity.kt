@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,6 +17,7 @@ import com.example.gratitudegarden.screen.GardenScreen
 import com.example.gratitudegarden.screen.AddEntryScreen
 import com.example.gratitudegarden.ui.theme.GratitudeGardenTheme
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.gratitudegarden.data.repository.GratitudeRepository
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
@@ -51,11 +53,20 @@ fun AppNavigation() {
         viewModel(factory = factory)
 
     val test: AddEntryViewModel = viewModel(factory = factory)
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute in listOf(
+        "garden",
+        "history",
+        "settings"
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            BottomNavBar(navController)
+            if (showBottomBar) {
+                BottomNavBar(navController)
+            }
         }
     ) { innerPadding ->
 
