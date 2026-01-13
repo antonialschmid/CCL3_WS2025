@@ -3,15 +3,25 @@ package com.example.gratitudegarden.screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.shape.CircleShape
+import com.example.gratitudegarden.data.model.GratitudeEntry
+import java.time.Instant
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.ZoneId
 
 @Composable
 fun HistoryScreen(
@@ -19,6 +29,12 @@ fun HistoryScreen(
     viewModel: AddEntryViewModel
 ) {
     val entries by viewModel.entries.collectAsState()
+
+    var currentMonth by remember {
+        mutableStateOf(
+            java.time.YearMonth.now()
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -31,11 +47,35 @@ fun HistoryScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        MonthSelector(
+            currentMonth = currentMonth,
+            onPrevious = { currentMonth = currentMonth.minusMonths(1) },
+            onNext = { currentMonth = currentMonth.plusMonths(1) }
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        CalendarGrid(
+            month = currentMonth,
+            entries = entries
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Previous entries",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         if (entries.isEmpty()) {
             Text(
-                text = "No entries yet 🌱",
+                text = "No entries yet",
                 style = MaterialTheme.typography.bodyMedium
             )
         } else {
@@ -53,6 +93,124 @@ fun HistoryScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MonthSelector(
+    currentMonth: java.time.YearMonth,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "<",
+            modifier = Modifier.clickable { onPrevious() }
+        )
+
+        Text(
+            text = currentMonth.month.name
+                .lowercase()
+                .replaceFirstChar { it.uppercase() },
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Text(
+            text = ">",
+            modifier = Modifier.clickable { onNext() }
+        )
+    }
+}
+
+@Composable
+fun CalendarGrid(
+    month: YearMonth,
+    entries: List<GratitudeEntry>
+) {
+    val days = remember(month) { daysInMonth(month) }
+
+    val weekdays = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    Column {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            weekdays.forEach { day ->
+                Text(
+                    text = day,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.weight(1f),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(7),
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(days) { date ->
+                if (date == null) {
+                    Spacer(modifier = Modifier.size(36.dp))
+                } else {
+                    CalendarDay(
+                        date = date,
+                        entries = entries
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CalendarDay(
+    date: LocalDate,
+    entries: List<com.example.gratitudegarden.data.model.GratitudeEntry>
+) {
+    val entryForDay = remember(entries, date) {
+        entries.firstOrNull {
+            Instant.ofEpochMilli(it.timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate() == date
+        }
+    }
+
+    val isFuture = date.isAfter(LocalDate.now())
+
+    val color = when {
+        isFuture -> MaterialTheme.colorScheme.surfaceVariant
+        entryForDay == null -> MaterialTheme.colorScheme.outlineVariant
+        else -> when (entryForDay.mood) {
+            "Happy" -> MaterialTheme.colorScheme.primary
+            "Peaceful" -> MaterialTheme.colorScheme.secondary
+            "Grateful" -> MaterialTheme.colorScheme.tertiary
+            else -> MaterialTheme.colorScheme.primary
+        }
+    }
+
+    Surface(
+        modifier = Modifier.size(36.dp),
+        shape = CircleShape,
+        color = color
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = date.dayOfMonth.toString(),
+                style = MaterialTheme.typography.labelSmall
+            )
         }
     }
 }
@@ -99,3 +257,17 @@ private fun HistoryItem(
         }
     }
 }
+private fun daysInMonth(month: YearMonth): List<LocalDate?> {
+    val firstDay = month.atDay(1)
+    val daysInMonth = month.lengthOfMonth()
+    val startOffset = firstDay.dayOfWeek.value - 1
+    val days = mutableListOf<LocalDate?>()
+
+    repeat(startOffset) { days.add(null) }
+    for (day in 1..daysInMonth) {
+        days.add(month.atDay(day))
+    }
+
+    return days
+}
+
