@@ -6,10 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +24,6 @@ import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModelFactory
 import com.example.gratitudegarden.db.AppDatabase
 import com.example.gratitudegarden.navigation.BottomNavBar
-import androidx.compose.material3.Icon
 import com.example.gratitudegarden.screen.DetailEntryScreen
 import com.example.gratitudegarden.screen.HistoryScreen
 import com.example.gratitudegarden.screen.SettingsScreen
@@ -72,21 +67,9 @@ fun AppNavigation() {
             if (showBottomBar) {
                 BottomNavBar(navController)
             }
-        },
-        floatingActionButton = {
-            if (showBottomBar) {
-                FloatingActionButton(
-                    onClick = { navController.navigate("addEntry") }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add entry"
-                    )
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center
+        }
     ) { innerPadding ->
+
 
 
     NavHost(

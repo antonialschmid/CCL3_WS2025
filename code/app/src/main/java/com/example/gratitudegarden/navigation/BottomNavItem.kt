@@ -3,7 +3,6 @@ package com.example.gratitudegarden.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
@@ -21,11 +20,5 @@ sealed class BottomNavItem(
         route = "history",
         label = "History",
         icon = Icons.Filled.List
-    )
-
-    object Settings : BottomNavItem(
-        route = "settings",
-        label = "Settings",
-        icon = Icons.Filled.Settings
     )
 }
