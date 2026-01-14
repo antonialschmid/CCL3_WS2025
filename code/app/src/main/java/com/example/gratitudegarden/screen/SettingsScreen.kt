@@ -1,6 +1,5 @@
 package com.example.gratitudegarden.screen
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -83,7 +82,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Notification setting
         var notificationsEnabled by remember { mutableStateOf(false) }
 
         SettingRow(
@@ -97,10 +95,21 @@ fun SettingsScreen(
             }
         )
 
-        // Export setting
         SettingRow(
             title = "Export Data",
             subtitle = "Download your entries",
+            trailing = {}
+        )
+
+        SettingRow(
+            title = "About",
+            subtitle = "Version 1.0",
+            trailing = {}
+        )
+
+        SettingRow(
+            title = "Privacy Policy",
+            subtitle = "How we protect your data",
             trailing = {}
         )
     }
