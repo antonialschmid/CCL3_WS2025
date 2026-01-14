@@ -59,7 +59,10 @@ fun HistoryScreen(
 
         CalendarGrid(
             month = currentMonth,
-            entries = entries
+            entries = entries,
+            onDayClick = { entry ->
+                navController.navigate("detail/${entry.id}")
+            }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -130,7 +133,8 @@ fun MonthSelector(
 @Composable
 fun CalendarGrid(
     month: YearMonth,
-    entries: List<GratitudeEntry>
+    entries: List<GratitudeEntry>,
+    onDayClick: (GratitudeEntry) -> Unit
 ) {
     val days = remember(month) { daysInMonth(month) }
 
@@ -166,7 +170,8 @@ fun CalendarGrid(
                 } else {
                     CalendarDay(
                         date = date,
-                        entries = entries
+                        entries = entries,
+                        onClick = onDayClick
                     )
                 }
             }
@@ -174,11 +179,11 @@ fun CalendarGrid(
     }
 }
 
-
 @Composable
 fun CalendarDay(
     date: LocalDate,
-    entries: List<com.example.gratitudegarden.data.model.GratitudeEntry>
+    entries: List<GratitudeEntry>,
+    onClick: (GratitudeEntry) -> Unit
 ) {
     val entryForDay = remember(entries, date) {
         entries.firstOrNull {
@@ -202,7 +207,15 @@ fun CalendarDay(
     }
 
     Surface(
-        modifier = Modifier.size(36.dp),
+        modifier = Modifier
+            .size(36.dp)
+            .then(
+                if (entryForDay != null && !isFuture) {
+                    Modifier.clickable { onClick(entryForDay) }
+                } else {
+                    Modifier
+                }
+            ),
         shape = CircleShape,
         color = color
     ) {
