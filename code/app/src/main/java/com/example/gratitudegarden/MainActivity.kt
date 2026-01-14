@@ -52,7 +52,6 @@ fun AppNavigation() {
     val addEntryViewModel: AddEntryViewModel =
         viewModel(factory = factory)
 
-    val test: AddEntryViewModel = viewModel(factory = factory)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val showBottomBar = currentRoute in listOf(
@@ -102,7 +101,7 @@ fun AppNavigation() {
             ) { backStackEntry ->
                 val entryId = backStackEntry.arguments
                     ?.getString("entryId")
-                    ?.toInt() ?: return@composable
+                    ?.toLong() ?: return@composable
 
                 DetailEntryScreen(
                     navController = navController,
@@ -110,8 +109,9 @@ fun AppNavigation() {
                     entryId = entryId
                 )
             }
+
             composable("settings") {
-                SettingsScreen(navController = navController)
+                    SettingsScreen(navController = navController)
             }
         }
     }
