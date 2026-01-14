@@ -2,26 +2,29 @@ package com.example.gratitudegarden.data.repository
 
 import com.example.gratitudegarden.db.GratitudeDao
 import com.example.gratitudegarden.data.model.GratitudeEntry
+import kotlinx.coroutines.flow.Flow
 
 class GratitudeRepository(
     private val dao: GratitudeDao
 ) {
 
-    suspend fun addEntry(entry: GratitudeEntry) {
+    fun getAllEntries(): Flow<List<GratitudeEntry>> {
+        return dao.getAllEntries()
+    }
+
+    suspend fun insert(entry: GratitudeEntry) {
         dao.insertEntry(entry)
     }
 
-    fun getEntries() = dao.getAllEntries()
-
-    suspend fun getEntryById(id: Int): GratitudeEntry? {
-        return dao.getEntryById(id)
-    }
-
-    suspend fun updateEntry(entry: GratitudeEntry) {
+    suspend fun update(entry: GratitudeEntry) {
         dao.updateEntry(entry)
     }
 
-    suspend fun deleteEntry(entry: GratitudeEntry) {
+    suspend fun delete(entry: GratitudeEntry) {
         dao.deleteEntry(entry)
+    }
+
+    suspend fun getEntryById(id: Long): GratitudeEntry? {
+        return dao.getEntryById(id.toInt())
     }
 }

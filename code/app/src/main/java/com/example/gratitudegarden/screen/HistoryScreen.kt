@@ -1,27 +1,35 @@
 package com.example.gratitudegarden.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
-import java.text.SimpleDateFormat
-import java.util.*
-import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.foundation.shape.CircleShape
 import com.example.gratitudegarden.data.model.GratitudeEntry
+import com.example.gratitudegarden.data.model.Mood
+import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
+import com.example.gratitudegarden.ui.theme.*
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
+import java.util.*
 
 @Composable
 fun HistoryScreen(
@@ -29,25 +37,24 @@ fun HistoryScreen(
     viewModel: AddEntryViewModel
 ) {
     val entries by viewModel.entries.collectAsState()
-
-    var currentMonth by remember {
-        mutableStateOf(
-            java.time.YearMonth.now()
-        )
-    }
+    var currentMonth by remember { mutableStateOf(YearMonth.now()) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .background(AppBackground)
+            .padding(horizontal = 20.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "History",
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
+            color = TextPrimary
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         MonthSelector(
             currentMonth = currentMonth,
@@ -57,7 +64,7 @@ fun HistoryScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CalendarGrid(
+        CalendarBox(
             month = currentMonth,
             entries = entries,
             onDayClick = { entry ->
@@ -67,91 +74,80 @@ fun HistoryScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
-
         Text(
             text = "Previous entries",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         if (entries.isEmpty()) {
-            Text(
-                text = "No entries yet",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Text("No entries yet", color = TextPrimary)
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(entries) { entry ->
-                    HistoryItem(
-                        text = entry.text,
-                        mood = entry.mood,
-                        timestamp = entry.timestamp,
-                        onClick = {
-                            navController.navigate("detail/${entry.id}")
-                        }
-                    )
+                    HistoryItem(entry) {
+                        navController.navigate("detail/${entry.id}")
+                    }
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
 @Composable
 fun MonthSelector(
-    currentMonth: java.time.YearMonth,
+    currentMonth: YearMonth,
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RectangleShape)
+            .border(1.dp, TextPrimary, RectangleShape)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "<",
-            modifier = Modifier.clickable { onPrevious() }
-        )
+        Text("<", modifier = Modifier.clickable { onPrevious() }, color = TextPrimary)
 
         Text(
-            text = currentMonth.month.name
-                .lowercase()
+            currentMonth.month.name.lowercase()
                 .replaceFirstChar { it.uppercase() },
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
         )
 
-        Text(
-            text = ">",
-            modifier = Modifier.clickable { onNext() }
-        )
+        Text(">", modifier = Modifier.clickable { onNext() }, color = TextPrimary)
     }
 }
 
 @Composable
-fun CalendarGrid(
+fun CalendarBox(
     month: YearMonth,
     entries: List<GratitudeEntry>,
     onDayClick: (GratitudeEntry) -> Unit
 ) {
-    val days = remember(month) { daysInMonth(month) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RectangleShape)
+            .border(1.dp, TextPrimary, RectangleShape)
+            .padding(12.dp)
+    ) {
 
-    val weekdays = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-
-    Column {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            weekdays.forEach { day ->
+        Row(modifier = Modifier.fillMaxWidth()) {
+            listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach {
                 Text(
-                    text = day,
-                    style = MaterialTheme.typography.labelSmall,
+                    it,
                     modifier = Modifier.weight(1f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextPrimary
                 )
             }
         }
@@ -160,19 +156,14 @@ fun CalendarGrid(
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
-            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(days) { date ->
+            items(daysInMonth(month)) { date ->
                 if (date == null) {
                     Spacer(modifier = Modifier.size(36.dp))
                 } else {
-                    CalendarDay(
-                        date = date,
-                        entries = entries,
-                        onClick = onDayClick
-                    )
+                    CalendarDay(date, entries, onDayClick)
                 }
             }
         }
@@ -185,102 +176,60 @@ fun CalendarDay(
     entries: List<GratitudeEntry>,
     onClick: (GratitudeEntry) -> Unit
 ) {
-    val entryForDay = remember(entries, date) {
-        entries.firstOrNull {
-            Instant.ofEpochMilli(it.timestamp)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate() == date
-        }
+    val entry = entries.firstOrNull {
+        Instant.ofEpochMilli(it.timestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate() == date
     }
 
-    val isFuture = date.isAfter(LocalDate.now())
+    val background =
+        if (entry != null) moodColor(Mood.valueOf(entry.mood))
+        else Color.Transparent
 
-    val color = when {
-        isFuture -> MaterialTheme.colorScheme.surfaceVariant
-        entryForDay == null -> MaterialTheme.colorScheme.outlineVariant
-        else -> when (entryForDay.mood) {
-            "Happy" -> MaterialTheme.colorScheme.primary
-            "Peaceful" -> MaterialTheme.colorScheme.secondary
-            "Grateful" -> MaterialTheme.colorScheme.tertiary
-            else -> MaterialTheme.colorScheme.primary
-        }
-    }
-
-    Surface(
+    Box(
         modifier = Modifier
             .size(36.dp)
-            .then(
-                if (entryForDay != null && !isFuture) {
-                    Modifier.clickable { onClick(entryForDay) }
-                } else {
-                    Modifier
-                }
-            ),
-        shape = CircleShape,
-        color = color
+            .background(background, CircleShape)
+            .then(if (entry != null) Modifier.clickable { onClick(entry) } else Modifier),
+        contentAlignment = Alignment.Center
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = date.dayOfMonth.toString(),
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
+        Text(date.dayOfMonth.toString(), color = TextPrimary)
     }
 }
 
 @Composable
-private fun HistoryItem(
-    text: String,
-    mood: String,
-    timestamp: Long,
+fun HistoryItem(
+    entry: GratitudeEntry,
     onClick: () -> Unit
 ) {
-    val date = remember(timestamp) {
-        SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-            .format(Date(timestamp))
-    }
+    val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        .format(Date(entry.timestamp))
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.White, RectangleShape)
+            .border(1.dp, TextPrimary, RectangleShape)
             .clickable { onClick() }
+            .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = date,
-                style = MaterialTheme.typography.labelMedium
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = mood,
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
+        Text(date, color = TextPrimary)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(entry.text, maxLines = 2, color = TextPrimary)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(entry.mood, style = MaterialTheme.typography.labelSmall, color = TextPrimary)
     }
 }
+
 private fun daysInMonth(month: YearMonth): List<LocalDate?> {
     val firstDay = month.atDay(1)
-    val daysInMonth = month.lengthOfMonth()
-    val startOffset = firstDay.dayOfWeek.value - 1
+    val offset = firstDay.dayOfWeek.value - 1
     val days = mutableListOf<LocalDate?>()
 
-    repeat(startOffset) { days.add(null) }
-    for (day in 1..daysInMonth) {
-        days.add(month.atDay(day))
+    repeat(offset) { days.add(null) }
+    repeat(month.lengthOfMonth()) { day ->
+        days.add(month.atDay(day + 1))
     }
 
     return days
 }
-
