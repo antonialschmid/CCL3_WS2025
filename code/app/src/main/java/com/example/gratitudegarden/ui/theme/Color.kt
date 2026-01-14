@@ -2,7 +2,6 @@ package com.example.gratitudegarden.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import com.example.gratitudegarden.data.model.Mood
-
 // App base colors
 val AppBackground = Color(0xFFEEEFE9)
 val NavBarBackground = Color(0xFFF4F5F1)
