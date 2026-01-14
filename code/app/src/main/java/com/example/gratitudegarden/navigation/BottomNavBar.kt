@@ -1,13 +1,27 @@
 package com.example.gratitudegarden.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.gratitudegarden.R
+import com.example.gratitudegarden.ui.theme.NavBarActive
+import com.example.gratitudegarden.ui.theme.NavBarBackground
+import com.example.gratitudegarden.ui.theme.TextPrimary
 
 @Composable
 fun BottomNavBar(
@@ -16,45 +30,73 @@ fun BottomNavBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = NavBarBackground,
+        tonalElevation = 0.dp
+    ) {
 
-        // Garden
-        NavigationBarItem(
+        BottomNavItem(
             selected = currentRoute == "garden",
+            iconRes = R.drawable.ic_garden,
             onClick = {
                 navController.navigate("garden") {
                     popUpTo("garden")
                     launchSingleTop = true
                 }
-            },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Garden") },
-            label = { Text("Garden") }
+            }
         )
 
-        // Add (CENTER)
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate("addEntry") },
-            icon = {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add entry"
-                )
-            },
-            label = { Text("Add") }
+        BottomNavItem(
+            selected = currentRoute == "addEntry",
+            iconRes = R.drawable.ic_add,
+            onClick = {
+                navController.navigate("addEntry")
+            }
         )
 
-        // History
-        NavigationBarItem(
+        BottomNavItem(
             selected = currentRoute == "history",
+            iconRes = R.drawable.ic_history,
             onClick = {
                 navController.navigate("history") {
                     popUpTo("garden")
                     launchSingleTop = true
                 }
-            },
-            icon = { Icon(Icons.Default.List, contentDescription = "History") },
-            label = { Text("History") }
+            }
         )
     }
+}
+
+@Composable
+private fun BottomNavItem(
+    selected: Boolean,
+    iconRes: Int,
+    onClick: () -> Unit
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (selected) NavBarActive else NavBarBackground
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    tint = TextPrimary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        },
+        alwaysShowLabel = false,
+        colors = NavigationBarItemDefaults.colors(
+            indicatorColor = Color.Transparent
+        )
+    )
 }

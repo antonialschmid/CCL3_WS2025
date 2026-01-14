@@ -1,46 +1,58 @@
 package com.example.gratitudegarden.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import com.example.gratitudegarden.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GardenScreen(
-    navController: NavController,
-    viewModel: AddEntryViewModel
+    navController: NavController
 ) {
     Scaffold(
+        containerColor = AppBackground,
         topBar = {
             TopAppBar(
-                title = { Text("My Garden") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = AppBackground
+                ),
+                title = {
+                    Column {
+                        Text(
+                            text = "My Garden",
+                            color = TextPrimary,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "3 moments of gratitude",
+                            color = TextSecondary,
+                            fontSize = 13.sp
+                        )
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = { navController.navigate("settings") }
                     ) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = TextPrimary
+                        )
                     }
                 }
             )
@@ -50,54 +62,83 @@ fun GardenScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(innerPadding)
+                .padding(horizontal = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-        Text(
-                text = "My Garden",
-                style = MaterialTheme.typography.headlineMedium
-            )
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Row(
+                modifier = Modifier
+                    .background(
+                        color = CardBackground,
+                        shape = RoundedCornerShape(6.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = TextPrimary,
+                        shape = RoundedCornerShape(6.dp)
+                    )
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "<",
+                    color = TextPrimary,
+                    fontSize = 18.sp
+                )
 
-            // Platzhalter für Pflanze
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = "12.02.2026",
+                    color = TextPrimary,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = ">",
+                    color = TextPrimary,
+                    fontSize = 18.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(36.dp))
+
             Box(
-                modifier = Modifier.size(180.dp),
+                modifier = Modifier
+                    .size(220.dp)
+                    .background(
+                        color = CardBackground,
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = TextPrimary,
+                        shape = CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
-                Text("🌱")
+                Text(
+                    text = "Plant",
+                    color = TextPrimary,
+                    fontSize = 16.sp
+                )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text = "Your plant is starting to grow",
-                style = MaterialTheme.typography.bodyMedium
+                text = "Your plant is starting to grow.\nKeep nurturing it.",
+                color = TextSecondary,
+                fontSize = 13.sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.padding(horizontal = 12.dp)
             )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(
-                onClick = { navController.navigate("addEntry") }
-            ) {
-                Text("Add today's gratitude")
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedButton(
-                onClick = { navController.navigate("history") }
-            ) {
-                Text("View history")
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedButton(
-                onClick = { navController.navigate("settings") }
-            ) {
-                Text("Settings")
-            }
         }
     }
 }
