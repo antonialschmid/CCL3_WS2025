@@ -19,6 +19,10 @@ class AddEntryViewModel(
             initialValue = emptyList()
         )
 
+    fun getEntryById(id: Long): GratitudeEntry? {
+        return entries.value.firstOrNull { it.id == id }
+    }
+
     fun saveEntry(text: String, mood: String) {
         val entry = GratitudeEntry(
             text = text,

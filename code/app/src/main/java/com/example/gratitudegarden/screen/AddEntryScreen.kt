@@ -7,12 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,9 +24,7 @@ fun AddEntryScreen(
             TopAppBar(
                 title = { Text("Add Entry") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -44,16 +38,9 @@ fun AddEntryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)   // 👈 THIS LINE WAS MISSING
+                .padding(innerPadding)
                 .padding(24.dp)
         ) {
-
-            Text(
-                text = "Add Entry",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = text,

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "gratitude_entries")
 data class GratitudeEntry(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val text: String,
     val mood: String,
     val timestamp: Long
