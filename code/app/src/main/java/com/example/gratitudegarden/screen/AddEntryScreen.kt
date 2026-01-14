@@ -16,10 +16,8 @@ import com.example.gratitudegarden.ui.theme.CardBackground
 import com.example.gratitudegarden.ui.theme.TextPrimary
 import com.example.gratitudegarden.ui.theme.moodColor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,9 +53,6 @@ fun AddEntryScreen(
         ) {
 
             Spacer(modifier = Modifier.height(16.dp))
-
-                .padding(24.dp)
-        ) {
 
             OutlinedTextField(
                 value = text,
