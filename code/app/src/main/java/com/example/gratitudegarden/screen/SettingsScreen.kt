@@ -1,8 +1,7 @@
 package com.example.gratitudegarden.screen
 
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Settings
@@ -96,21 +95,10 @@ fun SettingsScreen(
             }
         )
 
+        // Export setting
         SettingRow(
             title = "Export Data",
             subtitle = "Download your entries",
-            trailing = {}
-        )
-
-        SettingRow(
-            title = "About",
-            subtitle = "Version 1.0",
-            trailing = {}
-        )
-
-        SettingRow(
-            title = "Privacy Policy",
-            subtitle = "How we protect your data",
             trailing = {}
         )
     }
