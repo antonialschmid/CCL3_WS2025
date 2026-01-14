@@ -12,41 +12,43 @@ class AddEntryViewModel(
     private val repository: GratitudeRepository
 ) : ViewModel() {
 
-    val entries = repository.getEntries()
+    val entries = repository.getAllEntries()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
 
-    fun getEntryById(id: Long): GratitudeEntry? {
-        return entries.value.firstOrNull { it.id == id }
-    }
-
-    fun saveEntry(text: String, mood: String) {
+    fun saveEntry(
+        text: String,
+        mood: String,
+        timestamp: Long
+    ) {
         val entry = GratitudeEntry(
+            id = 0,
             text = text,
             mood = mood,
-            timestamp = System.currentTimeMillis()
+            timestamp = timestamp
         )
 
         viewModelScope.launch {
-            repository.addEntry(entry)
+            repository.insert(entry)
         }
-    }
-    suspend fun getEntryById(id: Int): GratitudeEntry? {
-        return repository.getEntryById(id)
     }
 
     fun updateEntry(entry: GratitudeEntry) {
         viewModelScope.launch {
-            repository.updateEntry(entry)
+            repository.update(entry)
         }
     }
 
     fun deleteEntry(entry: GratitudeEntry) {
         viewModelScope.launch {
-            repository.deleteEntry(entry)
+            repository.delete(entry)
         }
+    }
+
+    fun getEntryById(id: Long): GratitudeEntry? {
+        return entries.value.firstOrNull { it.id == id }
     }
 }
