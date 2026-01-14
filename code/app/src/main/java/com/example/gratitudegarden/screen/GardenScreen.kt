@@ -109,7 +109,9 @@ fun GardenScreen(
             Spacer(modifier = Modifier.height(36.dp))
 
             Box(
-                modifier = Modifier.size(240.dp),
+                modifier = Modifier
+                    .size(320.dp)
+                    .padding(top = 120.dp),
                 contentAlignment = Alignment.Center
             ) {
                 MonthlyDotsCircle(
@@ -122,14 +124,14 @@ fun GardenScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(90.dp))
 
             Text(
-                text = "Your plant is starting to grow.\nKeep nurturing it.",
+                text = "Your plant is starting to grow. Keep nurturing it.",
                 color = TextSecondary,
                 fontSize = 13.sp,
                 lineHeight = 18.sp,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
     }
@@ -143,7 +145,7 @@ fun MonthlyDotsCircle(
     val today = java.time.LocalDate.now().dayOfMonth
 
     Canvas(modifier = modifier) {
-        val radius = size.minDimension / 2.2f
+        val radius = size.minDimension / 1.2f
         val center = this.center
 
         for (day in 1..daysInMonth) {
@@ -156,17 +158,17 @@ fun MonthlyDotsCircle(
 
             drawCircle(
                 color = Color.LightGray,
-                radius = 6f,
+                radius = 20f,
                 center = dotCenter
             )
 
             if (day == today) {
                 drawCircle(
                     color = TextPrimary,
-                    radius = 10f,
+                    radius = 25f,
                     center = dotCenter,
                     style = androidx.compose.ui.graphics.drawscope.Stroke(
-                        width = 2f
+                        width = 5f
                     )
                 )
             }
