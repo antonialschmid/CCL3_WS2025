@@ -1,7 +1,6 @@
 package com.example.gratitudegarden.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,6 +19,6 @@ sealed class BottomNavItem(
     object History : BottomNavItem(
         route = "history",
         label = "History",
-        icon = Icons.AutoMirrored.Filled.List
+        icon = Icons.Filled.List
     )
 }
