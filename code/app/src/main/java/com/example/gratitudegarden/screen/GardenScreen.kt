@@ -1,9 +1,10 @@
 package com.example.gratitudegarden.screen
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -11,11 +12,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.gratitudegarden.R
 import com.example.gratitudegarden.ui.theme.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,11 +90,7 @@ fun GardenScreen(
                     .padding(horizontal = 20.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "<",
-                    color = TextPrimary,
-                    fontSize = 18.sp
-                )
+                Text("<", color = TextPrimary, fontSize = 18.sp)
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -100,33 +103,22 @@ fun GardenScreen(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(
-                    text = ">",
-                    color = TextPrimary,
-                    fontSize = 18.sp
-                )
+                Text(">", color = TextPrimary, fontSize = 18.sp)
             }
 
             Spacer(modifier = Modifier.height(36.dp))
 
             Box(
-                modifier = Modifier
-                    .size(220.dp)
-                    .background(
-                        color = CardBackground,
-                        shape = CircleShape
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = TextPrimary,
-                        shape = CircleShape
-                    ),
+                modifier = Modifier.size(240.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Plant",
-                    color = TextPrimary,
-                    fontSize = 16.sp
+                MonthlyDotsCircle(
+                    daysInMonth = 31,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                PlantStageImage(
+                    totalEntries = 3
                 )
             }
 
@@ -141,4 +133,62 @@ fun GardenScreen(
             )
         }
     }
+}
+
+@Composable
+fun MonthlyDotsCircle(
+    daysInMonth: Int,
+    modifier: Modifier = Modifier
+) {
+    val today = java.time.LocalDate.now().dayOfMonth
+
+    Canvas(modifier = modifier) {
+        val radius = size.minDimension / 2.2f
+        val center = this.center
+
+        for (day in 1..daysInMonth) {
+            val angleDegrees = (360f / daysInMonth) * (day - 1) - 90f
+            val angleRad = Math.toRadians(angleDegrees.toDouble())
+
+            val x = center.x + radius * cos(angleRad).toFloat()
+            val y = center.y + radius * sin(angleRad).toFloat()
+            val dotCenter = Offset(x, y)
+
+            drawCircle(
+                color = Color.LightGray,
+                radius = 6f,
+                center = dotCenter
+            )
+
+            if (day == today) {
+                drawCircle(
+                    color = TextPrimary,
+                    radius = 10f,
+                    center = dotCenter,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(
+                        width = 2f
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PlantStageImage(
+    totalEntries: Int
+) {
+    val stageRes = when {
+        totalEntries < 3 -> R.drawable.plant_stage_1
+        totalEntries < 6 -> R.drawable.plant_stage_2
+        totalEntries < 10 -> R.drawable.plant_stage_3
+        totalEntries < 15 -> R.drawable.plant_stage_4
+        else -> R.drawable.plant_stage_5
+    }
+
+    Image(
+        painter = painterResource(id = stageRes),
+        contentDescription = "Plant growth stage",
+        modifier = Modifier.size(80.dp)
+    )
 }
