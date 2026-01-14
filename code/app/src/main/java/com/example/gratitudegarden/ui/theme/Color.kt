@@ -2,10 +2,17 @@ package com.example.gratitudegarden.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// 🌍 App Backgrounds
+val AppBackground = Color(0xFFEEEFE9)
+val NavBarBackground = Color(0xFFF4F5F1)
+val CardBackground = Color(0xFFFFFFFF)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// 🌿 Accent / Active States
+val NavBarActive = Color(0xFFB9CDB2)
+
+// ✏️ Text
+val TextPrimary = Color(0xFF5A5752)
+val TextSecondary = Color(0xFF9CA3AF)
+
+// ➖ Borders & Dividers (optional, ruhig)
+val BorderLight = Color(0xFFD1D5DB)

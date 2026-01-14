@@ -81,7 +81,6 @@ fun AppNavigation() {
             composable("garden") {
                 GardenScreen(
                     navController = navController,
-                    viewModel = addEntryViewModel
                 )
             }
 
