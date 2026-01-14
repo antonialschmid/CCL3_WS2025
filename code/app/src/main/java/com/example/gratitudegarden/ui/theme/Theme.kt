@@ -5,7 +5,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val GratitudeColorScheme = lightColorScheme(
-    primary = NavBarActive,
+
     onPrimary = TextPrimary,
 
     secondary = NavBarBackground,
