@@ -20,6 +20,7 @@ import com.example.gratitudegarden.data.model.Mood
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.ui.theme.AppBackground
 import com.example.gratitudegarden.ui.theme.CardBackground
+import com.example.gratitudegarden.ui.theme.MoodPeaceful
 import com.example.gratitudegarden.ui.theme.TextPrimary
 import com.example.gratitudegarden.ui.theme.moodColor
 
@@ -105,7 +106,7 @@ fun AddEntryScreen(
                         } else if (selectedMood == mood) {
                             moodColor(mood)
                         } else {
-                            moodColor(mood).copy(alpha = 0.5f)
+                            moodColor(mood).copy(alpha = 0.2f)
                         }
 
                     Column(
@@ -144,7 +145,7 @@ fun AddEntryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(1.dp, TextPrimary, RectangleShape)
-                    .background(CardBackground, RectangleShape)
+                    .background(MoodPeaceful, RectangleShape)
                     .clickable(enabled = text.isNotBlank()) {
                         selectedMood?.let {
                             viewModel.saveEntry(
