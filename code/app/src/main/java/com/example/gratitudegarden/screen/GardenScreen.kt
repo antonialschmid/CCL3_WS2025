@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -30,7 +29,6 @@ import com.example.gratitudegarden.ui.theme.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -43,10 +41,9 @@ fun GardenScreen(
     val entries by viewModel.entries.collectAsState()
     val entryCount = entries.size
 
-    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-    var showDatePicker by remember { mutableStateOf(false) }
-
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    var selectedMonth by remember {
+        mutableStateOf(java.time.YearMonth.now())
+    }
 
     Scaffold(
         containerColor = AppBackground,
@@ -109,21 +106,24 @@ fun GardenScreen(
 
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "Previous day",
+                    contentDescription = "Previous month",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable { selectedDate = selectedDate.minusDays(1) },
+                        .clickable {
+                            selectedMonth = selectedMonth.minusMonths(1)
+                        },
                     tint = TextPrimary
                 )
 
                 Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { showDatePicker = true },
+                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = selectedDate.format(formatter),
+                        text = selectedMonth.month.name
+                            .lowercase()
+                            .replaceFirstChar { it.uppercase() } +
+                                " " + selectedMonth.year,
                         color = TextPrimary,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Medium
@@ -132,10 +132,12 @@ fun GardenScreen(
 
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Next day",
+                    contentDescription = "Next month",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable { selectedDate = selectedDate.plusDays(1) },
+                        .clickable {
+                            selectedMonth = selectedMonth.plusMonths(1)
+                        },
                     tint = TextPrimary
                 )
             }
@@ -149,7 +151,7 @@ fun GardenScreen(
                 contentAlignment = Alignment.Center
             ) {
                 MonthlyDotsCircle(
-                    month = selectedDate,
+                    month = selectedMonth,
                     entries = entries,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -168,61 +170,13 @@ fun GardenScreen(
             )
         }
     }
-
-
-    if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
-        )
-
-        DatePickerDialog(
-            colors = DatePickerDefaults.colors(
-                containerColor = CardBackground
-            ),
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        selectedDate = Instant.ofEpochMilli(it)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                    }
-                    showDatePicker = false
-                }) {
-                    Text("OK", color = TextPrimary)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel", color = TextPrimary)
-                }
-            }
-        ) {
-            DatePicker(
-                state = datePickerState,
-                colors = DatePickerDefaults.colors(
-                    containerColor = CardBackground,
-                    titleContentColor = TextPrimary,
-                    headlineContentColor = TextPrimary,
-                    weekdayContentColor = TextSecondary,
-                    dayContentColor = TextPrimary,
-                    selectedDayContainerColor = MoodPeaceful,
-                    selectedDayContentColor = TextPrimary,
-                    todayDateBorderColor = TextPrimary
-                )
-            )
-        }
-    }
 }
 
 
 
 @Composable
 fun MonthlyDotsCircle(
-    month: LocalDate,
+    month: java.time.YearMonth,
     entries: List<GratitudeEntry>,
     modifier: Modifier = Modifier
 ) {
@@ -233,6 +187,7 @@ fun MonthlyDotsCircle(
         val radius = size.minDimension / 1.1f
         val center = this.center
 
+        // outer faint circle
         drawCircle(
             color = TextPrimary.copy(alpha = 0.08f),
             radius = radius,
@@ -241,7 +196,8 @@ fun MonthlyDotsCircle(
         )
 
         for (day in 1..daysInMonth) {
-            val date = month.withDayOfMonth(day)
+            val date = month.atDay(day)
+
             val angle = (360f / daysInMonth) * (day - 1) - 90f
             val rad = Math.toRadians(angle.toDouble())
 
@@ -250,20 +206,24 @@ fun MonthlyDotsCircle(
                 y = center.y + radius * sin(rad).toFloat()
             )
 
-            val entryForDay = entries
-                .filter {
-                    Instant.ofEpochMilli(it.timestamp)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate() == date
-                }
-                .minByOrNull { it.timestamp }
+            val entryForDay = entries.firstOrNull {
+                Instant.ofEpochMilli(it.timestamp)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate() == date
+            }
 
             val dotColor =
                 entryForDay?.let { moodColor(Mood.valueOf(it.mood)) }
                     ?: Color.LightGray
 
-            drawCircle(color = dotColor, radius = 22f, center = dotCenter)
+            // dot
+            drawCircle(
+                color = dotColor,
+                radius = 22f,
+                center = dotCenter
+            )
 
+            // entry ring
             if (entryForDay != null) {
                 drawCircle(
                     color = Color.White,
@@ -273,6 +233,7 @@ fun MonthlyDotsCircle(
                 )
             }
 
+            // TODAY ring (only if today is in this month)
             if (date == today) {
                 drawCircle(
                     color = TextPrimary.copy(alpha = 0.6f),
