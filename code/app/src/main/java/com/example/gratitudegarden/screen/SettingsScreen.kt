@@ -1,5 +1,7 @@
 package com.example.gratitudegarden.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +19,10 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gratitudegarden.ui.theme.CardBackground
+import com.example.gratitudegarden.ui.theme.MoodPeaceful
+import com.example.gratitudegarden.ui.theme.TextPrimary
+import com.example.gratitudegarden.ui.theme.TextSecondary
 
 @Composable
 fun SettingsScreen(
@@ -88,10 +94,24 @@ fun SettingsScreen(
             title = "Notifications",
             subtitle = "Daily reminders",
             trailing = {
-                Switch(
-                    checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
-                )
+                Box(
+                    modifier = Modifier
+                        .background(CardBackground, RectangleShape)
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
+                ) {
+                    Switch(
+                        checked = notificationsEnabled,
+                        onCheckedChange = { notificationsEnabled = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = TextPrimary,
+                            checkedTrackColor = MoodPeaceful,
+                            uncheckedThumbColor = TextPrimary,
+                            uncheckedTrackColor = CardBackground,
+                            uncheckedBorderColor = TextPrimary,
+                            checkedBorderColor = TextPrimary
+                        )
+                    )
+                }
             }
         )
 
@@ -121,36 +141,37 @@ fun StatCard(
     value: String,
     icon: ImageVector
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        shape = RectangleShape
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-
-            Icon(
-                imageVector = icon,
-                contentDescription = null
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.headlineSmall,
+                color = TextPrimary
             )
         }
+
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = TextPrimary
+        )
     }
+
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
@@ -159,31 +180,31 @@ fun SettingRow(
     subtitle: String,
     trailing: @Composable () -> Unit
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RectangleShape
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
-
-            trailing()
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary
+            )
         }
+
+        trailing()
     }
+
+    Spacer(modifier = Modifier.height(8.dp))
 }

@@ -101,8 +101,8 @@ fun GardenScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(CardBackground, RoundedCornerShape(6.dp))
-                    .border(1.dp, TextPrimary, RoundedCornerShape(6.dp))
+                    .background(CardBackground)
+                    .border(1.dp, TextPrimary)
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
