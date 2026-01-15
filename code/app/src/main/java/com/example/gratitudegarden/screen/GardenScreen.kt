@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -159,12 +160,12 @@ fun GardenScreen(
                 PlantStageImage(totalEntries = entryCount)
             }
 
-            Spacer(modifier = Modifier.height(90.dp))
+            Spacer(modifier = Modifier.height(120.dp))
 
             Text(
                 text = "Your plant is starting to grow. Keep nurturing it.",
                 color = TextSecondary,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 lineHeight = 18.sp,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
@@ -187,6 +188,7 @@ fun MonthlyDotsCircle(
         val radius = size.minDimension / 1.1f
         val center = this.center
 
+        // Outer circle
         drawCircle(
             color = TextPrimary.copy(alpha = 0.08f),
             radius = radius,
@@ -211,32 +213,56 @@ fun MonthlyDotsCircle(
                     .toLocalDate() == date
             }
 
+            val isToday = date == today
+
+            val dotRadius = if (isToday) 42f else 26f
+
             val dotColor =
                 entryForDay?.let { moodColor(Mood.valueOf(it.mood)) }
                     ?: Color.LightGray
 
             drawCircle(
                 color = dotColor,
-                radius = 26f,
+                radius = dotRadius,
                 center = dotCenter
             )
 
             if (entryForDay != null) {
                 drawCircle(
-                    color = Color.Transparent,
-                    radius = 26f,
+                    color = TextPrimary,
+                    radius = dotRadius,
                     center = dotCenter,
                     style = androidx.compose.ui.graphics.drawscope.Stroke(3f)
                 )
             }
 
-            if (date == today) {
+            if (isToday) {
                 drawCircle(
                     color = TextPrimary.copy(alpha = 0.6f),
-                    radius = 32f,
+                    radius = dotRadius + 6f,
                     center = dotCenter,
                     style = androidx.compose.ui.graphics.drawscope.Stroke(4f)
                 )
+
+                drawContext.canvas.nativeCanvas.apply {
+                    val paint = android.graphics.Paint().apply {
+                        color = android.graphics.Color.BLACK
+                        textAlign = android.graphics.Paint.Align.CENTER
+                        textSize = 38f
+                        isAntiAlias = true
+                        typeface = android.graphics.Typeface.DEFAULT_BOLD
+                    }
+
+                    val yOffset =
+                        (paint.descent() + paint.ascent()) / 2
+
+                    drawText(
+                        day.toString(),
+                        dotCenter.x,
+                        dotCenter.y - yOffset,
+                        paint
+                    )
+                }
             }
         }
     }
