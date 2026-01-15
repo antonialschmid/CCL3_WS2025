@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.R
+import com.example.gratitudegarden.data.model.GratitudeEntry
+import com.example.gratitudegarden.data.model.Mood
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.ui.theme.*
 import java.time.Instant
@@ -99,8 +101,8 @@ fun GardenScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(1.dp, TextPrimary, )
-                    .background(CardBackground, )
+                    .background(CardBackground, RoundedCornerShape(6.dp))
+                    .border(1.dp, TextPrimary, RoundedCornerShape(6.dp))
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -110,9 +112,7 @@ fun GardenScreen(
                     contentDescription = "Previous day",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable {
-                            selectedDate = selectedDate.minusDays(1)
-                        },
+                        .clickable { selectedDate = selectedDate.minusDays(1) },
                     tint = TextPrimary
                 )
 
@@ -135,9 +135,7 @@ fun GardenScreen(
                     contentDescription = "Next day",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable {
-                            selectedDate = selectedDate.plusDays(1)
-                        },
+                        .clickable { selectedDate = selectedDate.plusDays(1) },
                     tint = TextPrimary
                 )
             }
@@ -151,7 +149,8 @@ fun GardenScreen(
                 contentAlignment = Alignment.Center
             ) {
                 MonthlyDotsCircle(
-                    daysInMonth = selectedDate.lengthOfMonth(),
+                    month = selectedDate,
+                    entries = entries,
                     modifier = Modifier.fillMaxSize()
                 )
 
@@ -171,65 +170,75 @@ fun GardenScreen(
             )
         }
     }
-
-    if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
-        )
-
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        selectedDate = Instant.ofEpochMilli(it)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                    }
-                    showDatePicker = false
-                }) {
-                    Text("OK")
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
 }
 
 @Composable
 fun MonthlyDotsCircle(
-    daysInMonth: Int,
+    month: LocalDate,
+    entries: List<GratitudeEntry>,
     modifier: Modifier = Modifier
 ) {
-    val today = LocalDate.now().dayOfMonth
+    val daysInMonth = month.lengthOfMonth()
+    val today = LocalDate.now()
 
     Canvas(modifier = modifier) {
-        val radius = size.minDimension / 1.2f
+        val radius = size.minDimension / 1.1f
         val center = this.center
 
+        drawCircle(
+            color = TextPrimary.copy(alpha = 0.08f),
+            radius = radius,
+            center = center,
+            style = androidx.compose.ui.graphics.drawscope.Stroke(6f)
+        )
+
         for (day in 1..daysInMonth) {
+            val date = month.withDayOfMonth(day)
+
             val angleDegrees = (360f / daysInMonth) * (day - 1) - 90f
             val angleRad = Math.toRadians(angleDegrees.toDouble())
 
             val x = center.x + radius * cos(angleRad).toFloat()
             val y = center.y + radius * sin(angleRad).toFloat()
+            val dotCenter = Offset(x, y)
 
+            val entryForDay = entries
+                .filter {
+                    Instant.ofEpochMilli(it.timestamp)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate() == date
+                }
+                .minByOrNull { it.timestamp }
+
+            val dotColor =
+                entryForDay?.let {
+                    moodColor(Mood.valueOf(it.mood))
+                } ?: Color.LightGray
+
+            // main dot
             drawCircle(
-                color = Color.LightGray,
-                radius = 20f,
-                center = Offset(x, y)
+                color = dotColor,
+                radius = 22f,
+                center = dotCenter
             )
 
-            if (day == today) {
+            // white ring for days with entry
+            if (entryForDay != null) {
                 drawCircle(
-                    color = TextPrimary,
-                    radius = 25f,
-                    center = Offset(x, y),
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(5f)
+                    color = Color.White,
+                    radius = 26f,
+                    center = dotCenter,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(3f)
+                )
+            }
+
+            // today ring (bigger + spaced)
+            if (date == today) {
+                drawCircle(
+                    color = TextPrimary.copy(alpha = 0.6f),
+                    radius = 32f,
+                    center = dotCenter,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(4f)
                 )
             }
         }
