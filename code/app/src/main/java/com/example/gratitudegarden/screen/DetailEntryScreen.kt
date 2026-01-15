@@ -258,8 +258,6 @@ fun DetailEntryScreen(
         }
     }
 
-    /* ---------- EDIT MODE DATE PICKER (STYLED) ---------- */
-
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = selectedDate
