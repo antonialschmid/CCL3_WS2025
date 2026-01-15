@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -118,12 +121,15 @@ fun MonthSelector(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Text(
-            "<",
-            modifier = Modifier.clickable {
-                onMonthChange(currentMonth.minusMonths(1))
-            },
-            color = TextPrimary
+        Icon(
+            imageVector = Icons.Default.ChevronLeft,
+            contentDescription = "Previous day",
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    onMonthChange(currentMonth.minusMonths(1))
+                },
+            tint = TextPrimary
         )
 
         Box {
@@ -180,12 +186,15 @@ fun MonthSelector(
             }
         }
 
-        Text(
-            ">",
-            modifier = Modifier.clickable {
-                onMonthChange(currentMonth.plusMonths(1))
-            },
-            color = TextPrimary
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = "Next day",
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    onMonthChange(currentMonth.plusMonths(1))
+                },
+            tint = TextPrimary
         )
     }
 }
