@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import com.example.gratitudegarden.R
 import com.example.gratitudegarden.data.model.Mood
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
@@ -56,7 +56,8 @@ fun DetailEntryScreen(
                 title = {
                     Text(
                         if (isEditing) "Edit Entry" else "Entry Details",
-                        color = TextPrimary
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineMedium
                     )
                 },
                 navigationIcon = {
@@ -92,6 +93,7 @@ fun DetailEntryScreen(
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
                     contentDescription = "Previous day",
@@ -184,9 +186,7 @@ fun DetailEntryScreen(
                             tint = TextPrimary,
                             modifier = Modifier.size(16.dp)
                         )
-
                         Spacer(modifier = Modifier.height(4.dp))
-
                         Text(
                             text = mood.name.lowercase()
                                 .replaceFirstChar { it.uppercase() },
@@ -258,6 +258,8 @@ fun DetailEntryScreen(
         }
     }
 
+    /* ---------- EDIT MODE DATE PICKER (STYLED) ---------- */
+
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = selectedDate
@@ -268,6 +270,9 @@ fun DetailEntryScreen(
 
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
+            colors = DatePickerDefaults.colors(
+                containerColor = CardBackground
+            ),
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
@@ -277,11 +282,29 @@ fun DetailEntryScreen(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK")
+                    Text("OK", color = TextPrimary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel", color = TextPrimary)
                 }
             }
         ) {
-            DatePicker(state = datePickerState)
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = CardBackground,
+                    titleContentColor = TextPrimary,
+                    headlineContentColor = TextPrimary,
+                    weekdayContentColor = TextSecondary,
+                    dayContentColor = TextPrimary,
+                    selectedDayContainerColor = MoodPeaceful,
+                    selectedDayContentColor = TextPrimary,
+                    todayDateBorderColor = TextPrimary,
+                    dividerColor = TextPrimary.copy(alpha = 0.15f)
+                )
+            )
         }
     }
 }
