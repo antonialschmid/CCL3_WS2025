@@ -154,9 +154,7 @@ fun GardenScreen(
                     modifier = Modifier.fillMaxSize()
                 )
 
-                PlantStageImage(
-                    totalEntries = entryCount
-                )
+                PlantStageImage(totalEntries = entryCount)
             }
 
             Spacer(modifier = Modifier.height(90.dp))
@@ -170,7 +168,57 @@ fun GardenScreen(
             )
         }
     }
+
+
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        )
+
+        DatePickerDialog(
+            colors = DatePickerDefaults.colors(
+                containerColor = CardBackground
+            ),
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        selectedDate = Instant.ofEpochMilli(it)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK", color = TextPrimary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel", color = TextPrimary)
+                }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = CardBackground,
+                    titleContentColor = TextPrimary,
+                    headlineContentColor = TextPrimary,
+                    weekdayContentColor = TextSecondary,
+                    dayContentColor = TextPrimary,
+                    selectedDayContainerColor = MoodPeaceful,
+                    selectedDayContentColor = TextPrimary,
+                    todayDateBorderColor = TextPrimary
+                )
+            )
+        }
+    }
 }
+
+
 
 @Composable
 fun MonthlyDotsCircle(
@@ -194,13 +242,13 @@ fun MonthlyDotsCircle(
 
         for (day in 1..daysInMonth) {
             val date = month.withDayOfMonth(day)
+            val angle = (360f / daysInMonth) * (day - 1) - 90f
+            val rad = Math.toRadians(angle.toDouble())
 
-            val angleDegrees = (360f / daysInMonth) * (day - 1) - 90f
-            val angleRad = Math.toRadians(angleDegrees.toDouble())
-
-            val x = center.x + radius * cos(angleRad).toFloat()
-            val y = center.y + radius * sin(angleRad).toFloat()
-            val dotCenter = Offset(x, y)
+            val dotCenter = Offset(
+                x = center.x + radius * cos(rad).toFloat(),
+                y = center.y + radius * sin(rad).toFloat()
+            )
 
             val entryForDay = entries
                 .filter {
@@ -211,18 +259,11 @@ fun MonthlyDotsCircle(
                 .minByOrNull { it.timestamp }
 
             val dotColor =
-                entryForDay?.let {
-                    moodColor(Mood.valueOf(it.mood))
-                } ?: Color.LightGray
+                entryForDay?.let { moodColor(Mood.valueOf(it.mood)) }
+                    ?: Color.LightGray
 
-            // main dot
-            drawCircle(
-                color = dotColor,
-                radius = 22f,
-                center = dotCenter
-            )
+            drawCircle(color = dotColor, radius = 22f, center = dotCenter)
 
-            // white ring for days with entry
             if (entryForDay != null) {
                 drawCircle(
                     color = Color.White,
@@ -232,7 +273,6 @@ fun MonthlyDotsCircle(
                 )
             }
 
-            // today ring (bigger + spaced)
             if (date == today) {
                 drawCircle(
                     color = TextPrimary.copy(alpha = 0.6f),
@@ -246,9 +286,7 @@ fun MonthlyDotsCircle(
 }
 
 @Composable
-fun PlantStageImage(
-    totalEntries: Int
-) {
+fun PlantStageImage(totalEntries: Int) {
     val stageRes = when {
         totalEntries < 3 -> R.drawable.plant_stage_1
         totalEntries < 6 -> R.drawable.plant_stage_2
@@ -258,7 +296,7 @@ fun PlantStageImage(
     }
 
     Image(
-        painter = painterResource(id = stageRes),
+        painter = painterResource(stageRes),
         contentDescription = "Plant growth stage",
         modifier = Modifier.size(80.dp)
     )

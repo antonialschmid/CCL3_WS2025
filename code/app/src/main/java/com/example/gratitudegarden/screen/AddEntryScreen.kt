@@ -43,7 +43,13 @@ fun AddEntryScreen(
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(0),
-                title = { Text("Add Entry", color = TextPrimary, style = MaterialTheme.typography.headlineMedium) },
+                title = {
+                    Text(
+                        "Add Entry",
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                },
 
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -220,6 +226,9 @@ fun AddEntryScreen(
 
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
+            colors = DatePickerDefaults.colors(
+                containerColor = CardBackground
+            ),
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
@@ -229,11 +238,29 @@ fun AddEntryScreen(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK")
+                    Text("OK", color = TextPrimary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel", color = TextPrimary)
                 }
             }
         ) {
-            DatePicker(state = datePickerState)
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = CardBackground,
+                    titleContentColor = TextPrimary,
+                    headlineContentColor = TextPrimary,
+                    weekdayContentColor = TextSecondary,
+                    dayContentColor = TextPrimary,
+                    selectedDayContentColor = TextPrimary,
+                    selectedDayContainerColor = MoodPeaceful,
+                    todayDateBorderColor = TextPrimary,
+                    dividerColor = TextPrimary.copy(alpha = 0.15f)
+                )
+            )
         }
     }
 }

@@ -10,13 +10,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,6 +29,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
+import java.time.Month
 import java.util.*
 
 @Composable
@@ -58,8 +59,7 @@ fun HistoryScreen(
 
         MonthSelector(
             currentMonth = currentMonth,
-            onPrevious = { currentMonth = currentMonth.minusMonths(1) },
-            onNext = { currentMonth = currentMonth.plusMonths(1) }
+            onMonthChange = { currentMonth = it }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -101,9 +101,13 @@ fun HistoryScreen(
 @Composable
 fun MonthSelector(
     currentMonth: YearMonth,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit
+    onMonthChange: (YearMonth) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val months = Month.values()
+    val years = (2025..2026).toList()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,16 +117,68 @@ fun MonthSelector(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("<", modifier = Modifier.clickable { onPrevious() }, color = TextPrimary)
 
         Text(
-            currentMonth.month.name.lowercase()
-                .replaceFirstChar { it.uppercase() },
-            style = MaterialTheme.typography.titleMedium,
+            "<",
+            modifier = Modifier.clickable {
+                onMonthChange(currentMonth.minusMonths(1))
+            },
             color = TextPrimary
         )
 
-        Text(">", modifier = Modifier.clickable { onNext() }, color = TextPrimary)
+        Box {
+            Text(
+                text = "${currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentMonth.year}",
+                style = MaterialTheme.typography.titleMedium,
+                color = TextPrimary,
+                modifier = Modifier.clickable { expanded = true }
+            )
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                years.forEach { year ->
+                    months.forEach { month ->
+                        val monthValue = YearMonth.of(year, month)
+                        val isSelected = monthValue == currentMonth
+
+                        DropdownMenuItem(
+                            onClick = {
+                                onMonthChange(monthValue)
+                                expanded = false
+                            },
+                            text = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(
+                                            if (isSelected)
+                                                TextPrimary.copy(alpha = 0.08f)
+                                            else Color.Transparent
+                                        )
+                                        .padding(vertical = 6.dp, horizontal = 8.dp)
+                                ) {
+                                    Text(
+                                        text = "${month.name.lowercase().replaceFirstChar { it.uppercase() }} $year",
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = TextPrimary
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+        Text(
+            ">",
+            modifier = Modifier.clickable {
+                onMonthChange(currentMonth.plusMonths(1))
+            },
+            color = TextPrimary
+        )
     }
 }
 
