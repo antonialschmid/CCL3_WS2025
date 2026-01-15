@@ -42,7 +42,9 @@ fun AddEntryScreen(
         containerColor = AppBackground,
         topBar = {
             TopAppBar(
-                title = { Text("Add Entry", color = TextPrimary) },
+                windowInsets = WindowInsets(0),
+                title = { Text("Add Entry", color = TextPrimary, style = MaterialTheme.typography.headlineMedium) },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

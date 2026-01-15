@@ -52,6 +52,7 @@ fun DetailEntryScreen(
         containerColor = AppBackground,
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0),
                 title = {
                     Text(
                         if (isEditing) "Edit Entry" else "Entry Details",
