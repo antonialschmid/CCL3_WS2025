@@ -245,8 +245,8 @@ fun MonthlyDotsCircle(
 @Composable
 fun PlantStageImage(totalEntries: Int) {
     val stageRes = when {
-        totalEntries < 3 -> R.drawable.plant_stage_1
-        totalEntries < 6 -> R.drawable.plant_stage_2
+        totalEntries < 0 -> R.drawable.plant_stage_1
+        totalEntries < 1 -> R.drawable.plant_stage_2
         totalEntries < 10 -> R.drawable.plant_stage_3
         totalEntries < 15 -> R.drawable.plant_stage_4
         else -> R.drawable.plant_stage_5
@@ -255,6 +255,6 @@ fun PlantStageImage(totalEntries: Int) {
     Image(
         painter = painterResource(stageRes),
         contentDescription = "Plant growth stage",
-        modifier = Modifier.size(80.dp)
+        modifier = Modifier.size(420.dp)
     )
 }
