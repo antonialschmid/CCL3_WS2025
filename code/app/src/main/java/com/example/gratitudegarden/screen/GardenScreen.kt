@@ -4,12 +4,15 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -20,41 +23,47 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.R
+import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.ui.theme.*
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlin.math.cos
 import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GardenScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AddEntryViewModel
 ) {
+    val entries by viewModel.entries.collectAsState()
+    val entryCount = entries.size
+
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+
     Scaffold(
         containerColor = AppBackground,
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = AppBackground
                 ),
                 title = {
-                    Column {
-                        Text(
-                            text = "My Garden",
-                            color = TextPrimary,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            text = "3 moments of gratitude",
-                            color = TextSecondary,
-                            fontSize = 13.sp
-                        )
-                    }
+                    Text(
+                        text = "Garden",
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Medium
+                    )
                 },
                 actions = {
-                    IconButton(
-                        onClick = { navController.navigate("settings") }
-                    ) {
+                    IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
@@ -74,36 +83,63 @@ fun GardenScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = when (entryCount) {
+                    0 -> "No moments of gratitude yet"
+                    1 -> "1 moment of gratitude"
+                    else -> "$entryCount moments of gratitude"
+                },
+                color = TextSecondary,
+                fontSize = 13.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier
-                    .background(
-                        color = CardBackground,
-                        shape = RoundedCornerShape(6.dp)
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = TextPrimary,
-                        shape = RoundedCornerShape(6.dp)
-                    )
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                    .fillMaxWidth()
+                    .border(1.dp, TextPrimary, )
+                    .background(CardBackground, )
+                    .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("<", color = TextPrimary, fontSize = 18.sp)
 
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Text(
-                    text = "12.02.2026",
-                    color = TextPrimary,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Medium
+                Icon(
+                    imageVector = Icons.Default.ChevronLeft,
+                    contentDescription = "Previous day",
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable {
+                            selectedDate = selectedDate.minusDays(1)
+                        },
+                    tint = TextPrimary
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showDatePicker = true },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = selectedDate.format(formatter),
+                        color = TextPrimary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
 
-                Text(">", color = TextPrimary, fontSize = 18.sp)
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "Next day",
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable {
+                            selectedDate = selectedDate.plusDays(1)
+                        },
+                    tint = TextPrimary
+                )
             }
 
             Spacer(modifier = Modifier.height(36.dp))
@@ -115,12 +151,12 @@ fun GardenScreen(
                 contentAlignment = Alignment.Center
             ) {
                 MonthlyDotsCircle(
-                    daysInMonth = 31,
+                    daysInMonth = selectedDate.lengthOfMonth(),
                     modifier = Modifier.fillMaxSize()
                 )
 
                 PlantStageImage(
-                    totalEntries = 3
+                    totalEntries = entryCount
                 )
             }
 
@@ -135,6 +171,33 @@ fun GardenScreen(
             )
         }
     }
+
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        )
+
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        selectedDate = Instant.ofEpochMilli(it)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 }
 
 @Composable
@@ -142,7 +205,7 @@ fun MonthlyDotsCircle(
     daysInMonth: Int,
     modifier: Modifier = Modifier
 ) {
-    val today = java.time.LocalDate.now().dayOfMonth
+    val today = LocalDate.now().dayOfMonth
 
     Canvas(modifier = modifier) {
         val radius = size.minDimension / 1.2f
@@ -154,22 +217,19 @@ fun MonthlyDotsCircle(
 
             val x = center.x + radius * cos(angleRad).toFloat()
             val y = center.y + radius * sin(angleRad).toFloat()
-            val dotCenter = Offset(x, y)
 
             drawCircle(
                 color = Color.LightGray,
                 radius = 20f,
-                center = dotCenter
+                center = Offset(x, y)
             )
 
             if (day == today) {
                 drawCircle(
                     color = TextPrimary,
                     radius = 25f,
-                    center = dotCenter,
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(
-                        width = 5f
-                    )
+                    center = Offset(x, y),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(5f)
                 )
             }
         }
