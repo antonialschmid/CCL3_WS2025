@@ -187,7 +187,6 @@ fun MonthlyDotsCircle(
         val radius = size.minDimension / 1.1f
         val center = this.center
 
-        // outer faint circle
         drawCircle(
             color = TextPrimary.copy(alpha = 0.08f),
             radius = radius,
@@ -216,24 +215,21 @@ fun MonthlyDotsCircle(
                 entryForDay?.let { moodColor(Mood.valueOf(it.mood)) }
                     ?: Color.LightGray
 
-            // dot
             drawCircle(
                 color = dotColor,
-                radius = 22f,
+                radius = 26f,
                 center = dotCenter
             )
 
-            // entry ring
             if (entryForDay != null) {
                 drawCircle(
-                    color = Color.White,
+                    color = Color.Transparent,
                     radius = 26f,
                     center = dotCenter,
                     style = androidx.compose.ui.graphics.drawscope.Stroke(3f)
                 )
             }
 
-            // TODAY ring (only if today is in this month)
             if (date == today) {
                 drawCircle(
                     color = TextPrimary.copy(alpha = 0.6f),
