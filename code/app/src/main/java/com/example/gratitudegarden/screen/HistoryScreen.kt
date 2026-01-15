@@ -111,7 +111,7 @@ fun MonthSelector(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RectangleShape)
+            .background(CardBackground, RectangleShape)
             .border(1.dp, TextPrimary, RectangleShape)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -127,6 +127,7 @@ fun MonthSelector(
         )
 
         Box {
+
             Text(
                 text = "${currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentMonth.year}",
                 style = MaterialTheme.typography.titleMedium,
@@ -136,8 +137,12 @@ fun MonthSelector(
 
             DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .background(CardBackground, RectangleShape)
+                    .border(1.dp, TextPrimary, RectangleShape)
             ) {
+
                 years.forEach { year ->
                     months.forEach { month ->
                         val monthValue = YearMonth.of(year, month)
@@ -161,8 +166,11 @@ fun MonthSelector(
                                 ) {
                                     Text(
                                         text = "${month.name.lowercase().replaceFirstChar { it.uppercase() }} $year",
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                        color = TextPrimary
+                                        color = TextPrimary,
+                                        fontWeight = if (isSelected)
+                                            FontWeight.Medium
+                                        else
+                                            FontWeight.Normal
                                     )
                                 }
                             }
@@ -191,7 +199,7 @@ fun CalendarBox(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RectangleShape)
+            .background(CardBackground, RectangleShape)
             .border(1.dp, TextPrimary, RectangleShape)
             .padding(12.dp)
     ) {
@@ -264,7 +272,7 @@ fun HistoryItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RectangleShape)
+            .background(CardBackground, RectangleShape)
             .border(1.dp, TextPrimary, RectangleShape)
             .clickable { onClick() }
             .padding(16.dp)
