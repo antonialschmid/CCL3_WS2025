@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -147,18 +146,25 @@ fun GardenScreen(
             Spacer(modifier = Modifier.height(36.dp))
 
             Box(
-                modifier = Modifier
-                    .size(320.dp)
-                    .padding(top = 120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                MonthlyDotsCircle(
-                    month = selectedMonth,
-                    entries = entries,
-                    modifier = Modifier.fillMaxSize()
-                )
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(400.dp).padding(top = 100.dp),
 
-                PlantStageImage(totalEntries = entryCount)
+            ) {
+
+                Box(
+                    modifier = Modifier.size(180.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MonthlyDotsCircle(
+                        month = selectedMonth,
+                        entries = entries,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                PlantStageImage(
+                    totalEntries = entryCount,
+                )
             }
 
             Spacer(modifier = Modifier.height(120.dp))
@@ -189,7 +195,6 @@ fun MonthlyDotsCircle(
         val radius = size.minDimension / 1.1f
         val center = this.center
 
-        // Outer circle
         drawCircle(
             color = TextPrimary.copy(alpha = 0.08f),
             radius = radius,
@@ -274,14 +279,14 @@ fun PlantStageImage(totalEntries: Int) {
     val stageRes = when {
         totalEntries < 0 -> R.drawable.plant_stage_1
         totalEntries < 1 -> R.drawable.plant_stage_2
-        totalEntries < 10 -> R.drawable.plant_stage_3
-        totalEntries < 15 -> R.drawable.plant_stage_4
+        totalEntries < 2 -> R.drawable.plant_stage_3
+        totalEntries < 3 -> R.drawable.plant_stage_4
         else -> R.drawable.plant_stage_5
     }
 
     Image(
         painter = painterResource(stageRes),
         contentDescription = "Plant growth stage",
-        modifier = Modifier.size(420.dp)
+        modifier = Modifier.size(280.dp)
     )
 }
