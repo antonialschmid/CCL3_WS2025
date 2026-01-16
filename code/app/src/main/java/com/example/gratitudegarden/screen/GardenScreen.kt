@@ -65,9 +65,10 @@ fun GardenScreen(
                 actions = {
                     IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            painter = painterResource(id = R.drawable.ic_settings),
                             contentDescription = "Settings",
-                            tint = TextPrimary
+                            tint = TextPrimary,
+                            modifier = Modifier.size(28.dp)
                         )
                     }
                 }
