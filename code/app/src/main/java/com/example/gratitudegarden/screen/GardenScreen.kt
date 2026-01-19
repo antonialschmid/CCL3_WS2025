@@ -17,9 +17,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gratitudegarden.R
 import com.example.gratitudegarden.data.model.GratitudeEntry
@@ -57,8 +55,7 @@ fun GardenScreen(
                     Text(
                         text = "Garden",
                         color = TextPrimary,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Medium
+                        style = MaterialTheme.typography.headlineMedium
                     )
                 },
                 actions = {
@@ -90,7 +87,7 @@ fun GardenScreen(
                     else -> "$entryCount moments of gratitude"
                 },
                 color = TextSecondary,
-                fontSize = 13.sp,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -126,8 +123,7 @@ fun GardenScreen(
                             .replaceFirstChar { it.uppercase() } +
                                 " " + selectedMonth.year,
                         color = TextPrimary,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
 
@@ -147,8 +143,9 @@ fun GardenScreen(
 
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.size(400.dp).padding(top = 100.dp),
-
+                modifier = Modifier
+                    .size(400.dp)
+                    .padding(top = 100.dp)
             ) {
 
                 Box(
@@ -162,25 +159,20 @@ fun GardenScreen(
                     )
                 }
 
-                PlantStageImage(
-                    totalEntries = entryCount,
-                )
+                PlantStageImage(totalEntries = entryCount)
             }
 
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(100.dp))
 
             Text(
                 text = "Your plant is starting to grow. Keep nurturing it.",
                 color = TextSecondary,
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
     }
 }
-
-
 
 @Composable
 fun MonthlyDotsCircle(

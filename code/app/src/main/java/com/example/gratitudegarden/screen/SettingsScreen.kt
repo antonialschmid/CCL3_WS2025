@@ -35,7 +35,6 @@ fun SettingsScreen(
             .padding(24.dp)
     ) {
 
-        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -43,12 +42,14 @@ fun SettingsScreen(
         ) {
             Text(
                 text = "Settings",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = TextPrimary
             )
 
             Icon(
                 imageVector = Icons.Default.Settings,
-                contentDescription = null
+                contentDescription = null,
+                tint = TextPrimary
             )
         }
 
@@ -83,7 +84,8 @@ fun SettingsScreen(
 
         Text(
             text = "Settings",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
         )
 
         Spacer(modifier = Modifier.height(12.dp))

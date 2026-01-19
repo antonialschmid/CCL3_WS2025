@@ -21,7 +21,6 @@ import com.example.gratitudegarden.data.model.Mood
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.ui.theme.*
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -55,9 +54,9 @@ fun DetailEntryScreen(
                 windowInsets = WindowInsets(0),
                 title = {
                     Text(
-                        if (isEditing) "Edit Entry" else "Entry Details",
-                        color = TextPrimary,
-                        style = MaterialTheme.typography.headlineMedium
+                        text = if (isEditing) "Edit Entry" else "Entry Details",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = TextPrimary
                     )
                 },
                 navigationIcon = {
@@ -108,13 +107,12 @@ fun DetailEntryScreen(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .clickable(enabled = isEditing) {
-                            showDatePicker = true
-                        },
+                        .clickable(enabled = isEditing) { showDatePicker = true },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = selectedDate.format(formatter),
+                        style = MaterialTheme.typography.bodyMedium,
                         color = TextPrimary
                     )
                 }
@@ -143,6 +141,7 @@ fun DetailEntryScreen(
                     .background(CardBackground, RectangleShape)
                     .border(1.dp, TextPrimary, RectangleShape),
                 shape = RectangleShape,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = TextPrimary,
                     unfocusedBorderColor = TextPrimary,
@@ -155,7 +154,12 @@ fun DetailEntryScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text("How do you feel today?", color = TextPrimary)
+            Text(
+                text = "How do you feel today?",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
@@ -200,59 +204,41 @@ fun DetailEntryScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             if (!isEditing) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, TextPrimary, RectangleShape)
-                        .background(MoodCalm, RectangleShape)
-                        .clickable { isEditing = true }
-                        .padding(vertical = 14.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Edit entry", color = TextPrimary)
-                }
+                FlatActionButton(
+                    text = "Edit entry",
+                    background = MoodCalm,
+                    onClick = { isEditing = true }
+                )
             } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, TextPrimary, RectangleShape)
-                        .background(MoodPeaceful, RectangleShape)
-                        .clickable {
-                            viewModel.updateEntry(
-                                entry.copy(
-                                    text = text,
-                                    mood = selectedMood.name,
-                                    timestamp = selectedDate
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                                        .toEpochMilli()
-                                )
+                FlatActionButton(
+                    text = "Save changes",
+                    background = MoodPeaceful,
+                    onClick = {
+                        viewModel.updateEntry(
+                            entry.copy(
+                                text = text,
+                                mood = selectedMood.name,
+                                timestamp = selectedDate
+                                    .atStartOfDay(ZoneId.systemDefault())
+                                    .toInstant()
+                                    .toEpochMilli()
                             )
-                            navController.popBackStack()
-                        }
-                        .padding(vertical = 14.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Save changes", color = TextPrimary)
-                }
+                        )
+                        navController.popBackStack()
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, TextPrimary, RectangleShape)
-                    .background(MoodHappy, RectangleShape)
-                    .clickable {
-                        viewModel.deleteEntry(entry)
-                        navController.popBackStack()
-                    }
-                    .padding(vertical = 14.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Delete", color = TextPrimary)
-            }
+            FlatActionButton(
+                text = "Delete",
+                background = MoodHappy,
+                onClick = {
+                    viewModel.deleteEntry(entry)
+                    navController.popBackStack()
+                }
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -268,9 +254,7 @@ fun DetailEntryScreen(
 
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
-            colors = DatePickerDefaults.colors(
-                containerColor = CardBackground
-            ),
+            colors = DatePickerDefaults.colors(containerColor = CardBackground),
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
@@ -304,6 +288,29 @@ fun DetailEntryScreen(
                 )
             )
         }
+    }
+}
+
+@Composable
+private fun FlatActionButton(
+    text: String,
+    background: androidx.compose.ui.graphics.Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(background, RectangleShape)
+            .clickable { onClick() }
+            .padding(vertical = 14.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextPrimary
+        )
     }
 }
 
