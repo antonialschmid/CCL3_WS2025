@@ -1,0 +1,64 @@
+Index: app/src/main/java/com/example/gratitudegarden/screen/AddEntryScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gratitudegarden.screen\n\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.material3.*\nimport androidx.compose.runtime.*\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.unit.dp\nimport androidx.navigation.NavController\nimport com.example.gratitudegarden.data.viewmodel.AddEntryViewModel\nimport androidx.compose.material3.TopAppBar\nimport androidx.compose.material3.IconButton\nimport androidx.compose.material3.Icon\nimport androidx.compose.material.icons.Icons\nimport androidx.compose.material.icons.automirrored.filled.ArrowBack\nimport androidx.compose.material3.ExperimentalMaterial3Api\n\n@OptIn(ExperimentalMaterial3Api::class)\n@Composable\nfun AddEntryScreen(\n    navController: NavController,\n    viewModel: AddEntryViewModel\n) {\n    var text by remember { mutableStateOf(\"\") }\n    var selectedMood by remember { mutableStateOf(\"Peaceful\") }\n\n    Scaffold(\n        topBar = {\n            TopAppBar(\n                title = { Text(\"Add Entry\") },\n                navigationIcon = {\n                    IconButton(\n                        onClick = { navController.popBackStack() }\n                    ) {\n                        Icon(\n                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,\n                            contentDescription = \"Back\"\n                        )\n                    }\n                }\n            )\n        }\n    ) { innerPadding ->\n\n        Column(\n            modifier = Modifier\n                .fillMaxSize()\n                .padding(innerPadding)   // \uD83D\uDC48 THIS LINE WAS MISSING\n                .padding(24.dp)\n        ) {\n\n            Text(\n                text = \"Add Entry\",\n                style = MaterialTheme.typography.headlineMedium\n            )\n\n            Spacer(modifier = Modifier.height(16.dp))\n\n            OutlinedTextField(\n                value = text,\n                onValueChange = { text = it },\n                placeholder = { Text(\"I am thankful for...\") },\n                modifier = Modifier.fillMaxWidth()\n            )\n\n            Spacer(modifier = Modifier.height(16.dp))\n\n            Text(\"How do you feel today?\")\n\n            Row {\n                listOf(\"Happy\", \"Peaceful\", \"Grateful\", \"Hopeful\").forEach { mood ->\n                    Button(\n                        onClick = { selectedMood = mood },\n                        modifier = Modifier.padding(4.dp)\n                    ) {\n                        Text(mood)\n                    }\n                }\n            }\n\n            Spacer(modifier = Modifier.height(32.dp))\n\n            Button(\n                onClick = {\n                    viewModel.saveEntry(text, selectedMood)\n                    navController.popBackStack()\n                },\n                enabled = text.isNotBlank(),\n                modifier = Modifier.fillMaxWidth()\n            ) {\n                Text(\"Save entry\")\n            }\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gratitudegarden/screen/AddEntryScreen.kt b/app/src/main/java/com/example/gratitudegarden/screen/AddEntryScreen.kt
+--- a/app/src/main/java/com/example/gratitudegarden/screen/AddEntryScreen.kt	(revision 517373f845ee71a534fc2f778a32845a08d5f883)
++++ b/app/src/main/java/com/example/gratitudegarden/screen/AddEntryScreen.kt	(date 1768389059012)
+@@ -11,7 +11,7 @@
+ import androidx.compose.material3.IconButton
+ import androidx.compose.material3.Icon
+ import androidx.compose.material.icons.Icons
+-import androidx.compose.material.icons.automirrored.filled.ArrowBack
++import androidx.compose.material.icons.filled.ArrowBack
+ import androidx.compose.material3.ExperimentalMaterial3Api
+ 
+ @OptIn(ExperimentalMaterial3Api::class)
+@@ -32,7 +32,7 @@
+                         onClick = { navController.popBackStack() }
+                     ) {
+                         Icon(
+-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
++                            imageVector = Icons.Default.ArrowBack,
+                             contentDescription = "Back"
+                         )
+                     }
+Index: app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gratitudegarden.ui.theme\n\nimport androidx.compose.ui.graphics.Color\n\n// \uD83C\uDF0D App Backgrounds\nval AppBackground = Color(0xFFEEEFE9)\nval NavBarBackground = Color(0xFFF4F5F1)\nval CardBackground = Color(0xFFFFFFFF)\n\n// \uD83C\uDF3F Accent / Active States\nval NavBarActive = Color(0xFFB9CDB2)\n\n// ✏\uFE0F Text\nval TextPrimary = Color(0xFF5A5752)\nval TextSecondary = Color(0xFF9CA3AF)\n\n// ➖ Borders & Dividers (optional, ruhig)\nval BorderLight = Color(0xFFD1D5DB)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt b/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt
+--- a/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt	(revision 517373f845ee71a534fc2f778a32845a08d5f883)
++++ b/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt	(date 1768389061861)
+@@ -2,17 +2,10 @@
+ 
+ import androidx.compose.ui.graphics.Color
+ 
+-// 🌍 App Backgrounds
+-val AppBackground = Color(0xFFEEEFE9)
+-val NavBarBackground = Color(0xFFF4F5F1)
+-val CardBackground = Color(0xFFFFFFFF)
+-
+-// 🌿 Accent / Active States
+-val NavBarActive = Color(0xFFB9CDB2)
++val Purple80 = Color(0xFFD0BCFF)
++val PurpleGrey80 = Color(0xFFCCC2DC)
++val Pink80 = Color(0xFFEFB8C8)
+ 
+-// ✏️ Text
+-val TextPrimary = Color(0xFF5A5752)
+-val TextSecondary = Color(0xFF9CA3AF)
+-
+-// ➖ Borders & Dividers (optional, ruhig)
+-val BorderLight = Color(0xFFD1D5DB)
+\ No newline at end of file
++val Purple40 = Color(0xFF6650a4)
++val PurpleGrey40 = Color(0xFF625b71)
++val Pink40 = Color(0xFF7D5260)
+\ No newline at end of file

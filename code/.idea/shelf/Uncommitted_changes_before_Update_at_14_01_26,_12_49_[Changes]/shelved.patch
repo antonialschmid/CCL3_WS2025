@@ -1,0 +1,18 @@
+Index: app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gratitudegarden.ui.theme\n\nimport androidx.compose.ui.graphics.Color\nimport com.example.gratitudegarden.data.model.Mood\n\n// \uD83C\uDF0D App Backgrounds\nval AppBackground = Color(0xFFEEEFE9)\nval NavBarBackground = Color(0xFFF4F5F1)\nval CardBackground = Color(0xFFFFFFFF)\n\n// \uD83C\uDF3F Accent / Active States\nval NavBarActive = Color(0xFFB9CDB2)\n\n// ✏\uFE0F Text\nval TextPrimary = Color(0xFF5A5752)\nval TextSecondary = Color(0xFF9CA3AF)\n\n// ➖ Borders & Dividers (optional, ruhig)\nval BorderLight = Color(0xFFD1D5DB)\n\n\n\nval MoodHappy = Color(0xFFE3BCC6)\nval MoodPeaceful = Color(0xFFB9CDB2)\nval MoodGrateful = Color(0xFFDDAB9B)\nval MoodHopeful = Color(0xFF95BAD2)\nval MoodCalm = Color(0xFFF5EFAE)\n\nfun moodColor(mood: Mood): Color {\n    return when (mood) {\n        Mood.HAPPY -> MoodHappy\n        Mood.PEACEFUL -> MoodPeaceful\n        Mood.GRATEFUL -> MoodGrateful\n        Mood.HOPEFUL -> MoodHopeful\n        Mood.CALM -> MoodCalm\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt b/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt
+--- a/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt	(revision be88b5d1cc7ff7194d421160221b893b7a732ca9)
++++ b/app/src/main/java/com/example/gratitudegarden/ui/theme/Color.kt	(date 1768391385684)
+@@ -1,7 +1,6 @@
+ package com.example.gratitudegarden.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+-import com.example.gratitudegarden.data.model.Mood
+ 
+ // 🌍 App Backgrounds
+ val AppBackground = Color(0xFFEEEFE9)
