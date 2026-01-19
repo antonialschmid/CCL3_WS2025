@@ -158,7 +158,6 @@ fun GardenScreen(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-
                 PlantStageImage(totalEntries = entryCount)
             }
 
@@ -212,9 +211,7 @@ fun MonthlyDotsCircle(
             }
 
             val isToday = date == today
-
             val dotRadius = if (isToday) 42f else 26f
-
             val dotColor =
                 entryForDay?.let { moodColor(Mood.valueOf(it.mood)) }
                     ?: Color.LightGray

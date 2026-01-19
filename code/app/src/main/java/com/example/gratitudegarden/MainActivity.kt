@@ -69,8 +69,6 @@ fun AppNavigation() {
         }
     ) { innerPadding ->
 
-
-
     NavHost(
             navController = navController,
             startDestination = "garden",
@@ -97,6 +95,7 @@ fun AppNavigation() {
                     viewModel = addEntryViewModel
                 )
             }
+
             composable(
                 route = "detail/{entryId}"
             ) { backStackEntry ->

@@ -55,7 +55,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Stats cards
         StatCard(
             title = "Total Entries",
             value = "3",
@@ -115,12 +114,6 @@ fun SettingsScreen(
                     )
                 }
             }
-        )
-
-        SettingRow(
-            title = "Export Data",
-            subtitle = "Download your entries",
-            trailing = {}
         )
 
         SettingRow(

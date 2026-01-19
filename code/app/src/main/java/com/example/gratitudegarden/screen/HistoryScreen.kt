@@ -320,6 +320,5 @@ private fun daysInMonth(month: YearMonth): List<LocalDate?> {
     repeat(month.lengthOfMonth()) { day ->
         days.add(month.atDay(day + 1))
     }
-
     return days
 }
