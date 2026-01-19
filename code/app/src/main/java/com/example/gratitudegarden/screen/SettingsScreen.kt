@@ -19,15 +19,58 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gratitudegarden.ui.theme.CardBackground
-import com.example.gratitudegarden.ui.theme.MoodPeaceful
-import com.example.gratitudegarden.ui.theme.TextPrimary
-import com.example.gratitudegarden.ui.theme.TextSecondary
+import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
+import com.example.gratitudegarden.notifications.NotificationPrefs
+import com.example.gratitudegarden.notifications.NotificationScheduler
+import com.example.gratitudegarden.ui.theme.*
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Composable
 fun SettingsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AddEntryViewModel
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val entries by viewModel.entries.collectAsState()
+    val totalEntries = entries.size
+
+    val today = LocalDate.now()
+    val startOfWeek = today.minusDays(6)
+
+    val entriesThisWeek = entries.count {
+        Instant.ofEpochMilli(it.timestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .isAfter(startOfWeek.minusDays(1))
+    }
+
+    val entryDates = entries
+        .map {
+            Instant.ofEpochMilli(it.timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        }
+        .distinct()
+        .sortedDescending()
+
+    val currentStreak =
+        if (entryDates.isEmpty()) 0
+        else entryDates
+            .zipWithNext()
+            .takeWhile { (a, b) -> a.minusDays(1) == b }
+            .count() + 1
+
+    val mostCommonMood =
+        entries.groupingBy { it.mood }
+            .eachCount()
+            .maxByOrNull { it.value }
+            ?.key
+            ?.lowercase()
+            ?.replaceFirstChar { it.uppercase() }
+            ?: "—"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,37 +88,31 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 color = TextPrimary
             )
-
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = null,
-                tint = TextPrimary
-            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         StatCard(
             title = "Total Entries",
-            value = "3",
+            value = totalEntries.toString(),
             icon = Icons.Default.ShowChart
         )
 
         StatCard(
             title = "This Week",
-            value = "3",
+            value = entriesThisWeek.toString(),
             icon = Icons.Default.CalendarToday
         )
 
         StatCard(
             title = "Current Streak",
-            value = "0",
+            value = currentStreak.toString(),
             icon = Icons.Default.EmojiEvents
         )
 
         StatCard(
             title = "Common Mood",
-            value = "Peaceful",
+            value = mostCommonMood,
             icon = Icons.Default.SentimentSatisfied
         )
 
@@ -102,14 +139,21 @@ fun SettingsScreen(
                 ) {
                     Switch(
                         checked = notificationsEnabled,
-                        onCheckedChange = { notificationsEnabled = it },
+                        onCheckedChange = {
+                            notificationsEnabled = it
+                            NotificationPrefs.setEnabled(context, it)
+
+                            if (it) {
+                                NotificationScheduler.scheduleDaily(context)
+                            } else {
+                                NotificationScheduler.cancel(context)
+                            }
+                        },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = TextPrimary,
                             checkedTrackColor = MoodPeaceful,
                             uncheckedThumbColor = TextPrimary,
-                            uncheckedTrackColor = CardBackground,
-                            uncheckedBorderColor = TextPrimary,
-                            checkedBorderColor = TextPrimary
+                            uncheckedTrackColor = CardBackground
                         )
                     )
                 }

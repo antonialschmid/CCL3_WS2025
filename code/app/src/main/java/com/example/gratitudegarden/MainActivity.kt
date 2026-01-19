@@ -111,7 +111,10 @@ fun AppNavigation() {
             }
 
             composable("settings") {
-                    SettingsScreen(navController = navController)
+                SettingsScreen(
+                    navController = navController,
+                    viewModel = addEntryViewModel
+                )
             }
         }
     }
