@@ -1,11 +1,12 @@
 package com.example.gratitudegarden.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.SentimentSatisfied
@@ -17,11 +18,58 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
+import com.example.gratitudegarden.notifications.NotificationPrefs
+import com.example.gratitudegarden.notifications.NotificationScheduler
+import com.example.gratitudegarden.ui.theme.*
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Composable
 fun SettingsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AddEntryViewModel
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val entries by viewModel.entries.collectAsState()
+    val totalEntries = entries.size
+
+    val today = LocalDate.now()
+    val startOfWeek = today.minusDays(6)
+
+    val entriesThisWeek = entries.count {
+        Instant.ofEpochMilli(it.timestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .isAfter(startOfWeek.minusDays(1))
+    }
+
+    val entryDates = entries
+        .map {
+            Instant.ofEpochMilli(it.timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        }
+        .distinct()
+        .sortedDescending()
+
+    val currentStreak =
+        if (entryDates.isEmpty()) 0
+        else entryDates
+            .zipWithNext()
+            .takeWhile { (a, b) -> a.minusDays(1) == b }
+            .count() + 1
+
+    val mostCommonMood =
+        entries.groupingBy { it.mood }
+            .eachCount()
+            .maxByOrNull { it.value }
+            ?.key
+            ?.lowercase()
+            ?.replaceFirstChar { it.uppercase() }
+            ?: "—"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,7 +77,6 @@ fun SettingsScreen(
             .padding(24.dp)
     ) {
 
-        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -37,39 +84,34 @@ fun SettingsScreen(
         ) {
             Text(
                 text = "Settings",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = null
+                style = MaterialTheme.typography.headlineMedium,
+                color = TextPrimary
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Stats cards
         StatCard(
             title = "Total Entries",
-            value = "3",
+            value = totalEntries.toString(),
             icon = Icons.Default.ShowChart
         )
 
         StatCard(
             title = "This Week",
-            value = "3",
+            value = entriesThisWeek.toString(),
             icon = Icons.Default.CalendarToday
         )
 
         StatCard(
             title = "Current Streak",
-            value = "0",
+            value = currentStreak.toString(),
             icon = Icons.Default.EmojiEvents
         )
 
         StatCard(
             title = "Common Mood",
-            value = "Peaceful",
+            value = mostCommonMood,
             icon = Icons.Default.SentimentSatisfied
         )
 
@@ -77,7 +119,8 @@ fun SettingsScreen(
 
         Text(
             text = "Settings",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -88,17 +131,32 @@ fun SettingsScreen(
             title = "Notifications",
             subtitle = "Daily reminders",
             trailing = {
-                Switch(
-                    checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
-                )
-            }
-        )
+                Box(
+                    modifier = Modifier
+                        .background(CardBackground, RectangleShape)
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
+                ) {
+                    Switch(
+                        checked = notificationsEnabled,
+                        onCheckedChange = {
+                            notificationsEnabled = it
+                            NotificationPrefs.setEnabled(context, it)
 
-        SettingRow(
-            title = "Export Data",
-            subtitle = "Download your entries",
-            trailing = {}
+                            if (it) {
+                                NotificationScheduler.scheduleDaily(context)
+                            } else {
+                                NotificationScheduler.cancel(context)
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = TextPrimary,
+                            checkedTrackColor = MoodPeaceful,
+                            uncheckedThumbColor = TextPrimary,
+                            uncheckedTrackColor = CardBackground
+                        )
+                    )
+                }
+            }
         )
 
         SettingRow(
@@ -121,36 +179,37 @@ fun StatCard(
     value: String,
     icon: ImageVector
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        shape = RectangleShape
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-
-            Icon(
-                imageVector = icon,
-                contentDescription = null
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.headlineSmall,
+                color = TextPrimary
             )
         }
+
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = TextPrimary
+        )
     }
+
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
@@ -159,31 +218,31 @@ fun SettingRow(
     subtitle: String,
     trailing: @Composable () -> Unit
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RectangleShape
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
-
-            trailing()
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary
+            )
         }
+
+        trailing()
     }
+
+    Spacer(modifier = Modifier.height(8.dp))
 }

@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -76,14 +79,18 @@ fun HistoryScreen(
 
         Text(
             text = "Previous entries",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = TextPrimary
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         if (entries.isEmpty()) {
-            Text("No entries yet", color = TextPrimary)
+            Text(
+                text = "No entries yet",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(entries) { entry ->
@@ -111,38 +118,45 @@ fun MonthSelector(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(CardBackground, RectangleShape)
-            .border(1.dp, TextPrimary, RectangleShape)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .background(CardBackground)
+            .border(1.dp, TextPrimary)
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Text(
-            "<",
-            modifier = Modifier.clickable {
-                onMonthChange(currentMonth.minusMonths(1))
-            },
-            color = TextPrimary
+        Icon(
+            imageVector = Icons.Default.ChevronLeft,
+            contentDescription = "Previous month",
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    onMonthChange(currentMonth.minusMonths(1))
+                },
+            tint = TextPrimary
         )
 
-        Box {
-
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .clickable { expanded = true },
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                text = "${currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentMonth.year}",
-                style = MaterialTheme.typography.titleMedium,
-                color = TextPrimary,
-                modifier = Modifier.clickable { expanded = true }
+                text = currentMonth.month.name
+                    .lowercase()
+                    .replaceFirstChar { it.uppercase() } +
+                        " " + currentMonth.year,
+                style = MaterialTheme.typography.titleLarge,
+                color = TextPrimary
             )
 
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier
-                    .background(CardBackground, RectangleShape)
-                    .border(1.dp, TextPrimary, RectangleShape)
+                    .background(CardBackground)
+                    .border(1.dp, TextPrimary)
             ) {
-
                 years.forEach { year ->
                     months.forEach { month ->
                         val monthValue = YearMonth.of(year, month)
@@ -154,25 +168,15 @@ fun MonthSelector(
                                 expanded = false
                             },
                             text = {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(
-                                            if (isSelected)
-                                                TextPrimary.copy(alpha = 0.08f)
-                                            else Color.Transparent
-                                        )
-                                        .padding(vertical = 6.dp, horizontal = 8.dp)
-                                ) {
-                                    Text(
-                                        text = "${month.name.lowercase().replaceFirstChar { it.uppercase() }} $year",
-                                        color = TextPrimary,
-                                        fontWeight = if (isSelected)
-                                            FontWeight.Medium
-                                        else
-                                            FontWeight.Normal
-                                    )
-                                }
+                                Text(
+                                    text = "${month.name.lowercase().replaceFirstChar { it.uppercase() }} $year",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = TextPrimary,
+                                    fontWeight = if (isSelected)
+                                        FontWeight.Medium
+                                    else
+                                        FontWeight.Normal
+                                )
                             }
                         )
                     }
@@ -180,12 +184,15 @@ fun MonthSelector(
             }
         }
 
-        Text(
-            ">",
-            modifier = Modifier.clickable {
-                onMonthChange(currentMonth.plusMonths(1))
-            },
-            color = TextPrimary
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = "Next month",
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    onMonthChange(currentMonth.plusMonths(1))
+                },
+            tint = TextPrimary
         )
     }
 }
@@ -207,7 +214,7 @@ fun CalendarBox(
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun").forEach {
                 Text(
-                    it,
+                    text = it,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelSmall,
@@ -247,17 +254,23 @@ fun CalendarDay(
     }
 
     val background =
-        if (entry != null) moodColor(Mood.valueOf(entry.mood))
-        else Color.Transparent
+        entry?.let { moodColor(Mood.valueOf(it.mood)) } ?: Color.Transparent
 
     Box(
         modifier = Modifier
             .size(36.dp)
             .background(background, CircleShape)
-            .then(if (entry != null) Modifier.clickable { onClick(entry) } else Modifier),
+            .then(
+                if (entry != null) Modifier.clickable { onClick(entry) }
+                else Modifier
+            ),
         contentAlignment = Alignment.Center
     ) {
-        Text(date.dayOfMonth.toString(), color = TextPrimary)
+        Text(
+            text = date.dayOfMonth.toString(),
+            style = MaterialTheme.typography.bodySmall,
+            color = TextPrimary
+        )
     }
 }
 
@@ -277,11 +290,24 @@ fun HistoryItem(
             .clickable { onClick() }
             .padding(16.dp)
     ) {
-        Text(date, color = TextPrimary)
+        Text(
+            text = date,
+            style = MaterialTheme.typography.bodySmall,
+            color = TextPrimary
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(entry.text, maxLines = 2, color = TextPrimary)
+        Text(
+            text = entry.text,
+            maxLines = 2,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextPrimary
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(entry.mood, style = MaterialTheme.typography.labelSmall, color = TextPrimary)
+        Text(
+            text = entry.mood,
+            style = MaterialTheme.typography.labelSmall,
+            color = TextPrimary
+        )
     }
 }
 
@@ -294,6 +320,5 @@ private fun daysInMonth(month: YearMonth): List<LocalDate?> {
     repeat(month.lengthOfMonth()) { day ->
         days.add(month.atDay(day + 1))
     }
-
     return days
 }

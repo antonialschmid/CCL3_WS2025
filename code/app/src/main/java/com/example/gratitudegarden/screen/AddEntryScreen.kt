@@ -45,12 +45,11 @@ fun AddEntryScreen(
                 windowInsets = WindowInsets(0),
                 title = {
                     Text(
-                        "Add Entry",
+                        text = "Add Entry",
                         color = TextPrimary,
                         style = MaterialTheme.typography.headlineMedium
                     )
                 },
-
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -84,14 +83,13 @@ fun AddEntryScreen(
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
                     contentDescription = "Previous day",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable {
-                            selectedDate = selectedDate.minusDays(1)
-                        },
+                        .clickable { selectedDate = selectedDate.minusDays(1) },
                     tint = TextPrimary
                 )
 
@@ -103,6 +101,7 @@ fun AddEntryScreen(
                 ) {
                     Text(
                         text = selectedDate.format(formatter),
+                        style = MaterialTheme.typography.titleLarge,
                         color = TextPrimary
                     )
                 }
@@ -112,9 +111,7 @@ fun AddEntryScreen(
                     contentDescription = "Next day",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable {
-                            selectedDate = selectedDate.plusDays(1)
-                        },
+                        .clickable { selectedDate = selectedDate.plusDays(1) },
                     tint = TextPrimary
                 )
             }
@@ -124,7 +121,14 @@ fun AddEntryScreen(
             OutlinedTextField(
                 value = text,
                 onValueChange = { text = it },
-                placeholder = { Text("I am thankful for...", color = TextPrimary) },
+                placeholder = {
+                    Text(
+                        text = "I am thankful for...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextSecondary
+                    )
+                },
+                textStyle = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
@@ -143,7 +147,12 @@ fun AddEntryScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text("How do you feel today?", color = TextPrimary)
+            Text(
+                text = "How do you feel today?",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
@@ -209,7 +218,11 @@ fun AddEntryScreen(
                     .padding(vertical = 14.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Save entry", color = TextPrimary)
+                Text(
+                    text = "Save entry",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextPrimary
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -238,12 +251,20 @@ fun AddEntryScreen(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK", color = TextPrimary)
+                    Text(
+                        text = "OK",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextPrimary
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel", color = TextPrimary)
+                    Text(
+                        text = "Cancel",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextPrimary
+                    )
                 }
             }
         ) {
