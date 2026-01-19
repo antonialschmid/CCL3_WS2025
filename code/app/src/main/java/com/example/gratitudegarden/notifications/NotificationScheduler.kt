@@ -21,7 +21,7 @@ object NotificationScheduler {
         )
 
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 20) // 8 PM, human-friendly
+            set(Calendar.HOUR_OF_DAY, 20)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             if (before(Calendar.getInstance())) add(Calendar.DAY_OF_YEAR, 1)

@@ -53,7 +53,7 @@ fun GardenScreen(
                 ),
                 title = {
                     Text(
-                        text = "Garden",
+                        text = "My Garden",
                         color = TextPrimary,
                         style = MaterialTheme.typography.headlineMedium
                     )
