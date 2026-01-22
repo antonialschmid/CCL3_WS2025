@@ -279,3 +279,4 @@ fun PlantStageImage(totalEntries: Int) {
         modifier = Modifier.size(280.dp)
     )
 }
+

@@ -1,175 +1,188 @@
-/* -----------------------------
-   GLOBAL RESET
------------------------------- */
+/* =========================
+   RESET
+========================= */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* -----------------------------
-   VARIABLES
------------------------------- */
-:root {
-  --text-main: #5A5752;
-  --text-soft: #6b7a72;
-  --border-main: rgba(0, 0, 0, 0.35);
-  --box-bg: rgba(255, 255, 255, 0.95);
-}
-
-/* -----------------------------
-   BODY – PASTEL GRADIENT BACKGROUND
------------------------------- */
+/* =========================
+   BASE
+========================= */
 body {
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  color: var(--text-main);
-  line-height: 1.7;
-  padding: 60px 20px;
-
-  background: linear-gradient(
-    180deg,
-    #dfeee6 0%,   /* soft pastel green */
-    #e7f1f0 40%,
-    #e3eef6 100%  /* soft pastel blue */
-  );
+  background: #EEEFE9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1e1e1e;
+  line-height: 1.6;
 }
 
-/* -----------------------------
-   NAVIGATION
------------------------------- */
+/* =========================
+   PAGE WRAPPER
+========================= */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* =========================
+   NAVBAR
+========================= */
 .navbar {
-  max-width: 900px;
-  margin: 0 auto 60px auto;
-  padding: 14px 24px;
-
-  background-color: var(--box-bg);
-  border: 1px solid var(--border-main);
-  border-radius: 1px;
+  background: #EEEFE9;
+  border-bottom: 1px solid #1e1e1e;
 }
 
-.nav-list {
-  list-style: none;
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
+  gap: 40px;
 }
 
-.nav-list a {
+.navbar a {
   text-decoration: none;
-  color: var(--text-soft);
-  font-size: 0.95rem;
-}
-
-.nav-list a:hover {
-  color: var(--text-main);
-}
-
-/* -----------------------------
-   HEADER
------------------------------- */
-.header {
-  max-width: 900px;
-  margin: 0 auto 90px auto;
-  padding: 50px 40px;
-  text-align: center;
-
-  background-color: var(--box-bg);
-  border: 1px solid var(--border-main);
-  border-radius: 1px;
-}
-
-.header h1 {
-  font-size: 3rem;
+  color: #1e1e1e;
   font-weight: 500;
-  margin-bottom: 12px;
 }
 
-.subtitle {
-  font-size: 1.1rem;
-  color: var(--text-soft);
+.navbar a.active {
+  text-decoration: underline;
 }
 
-/* -----------------------------
-   CONTENT SECTIONS (BOXES)
------------------------------- */
-.section {
-  max-width: 900px;
-  margin: 0 auto 80px auto;
-  padding: 40px;
-
-  background-color: var(--box-bg);
-  border: 1px solid var(--border-main);
-  border-radius: 1px;
+/* =========================
+   HEADINGS
+========================= */
+h1 {
+  font-size: 32px;
+  margin-bottom: 32px;
 }
 
-.section h2 {
-  font-size: 1.8rem;
-  font-weight: 500;
+h2 {
+  font-size: 22px;
   margin-bottom: 16px;
 }
 
-.section p {
-  font-size: 1rem;
-  color: var(--text-soft);
-  margin-bottom: 14px;
-  max-width: 720px;
-}
-
-/* -----------------------------
-   LISTS
------------------------------- */
-.section ul {
-  margin-left: 20px;
-  color: var(--text-soft);
-}
-
-.section li {
+h3 {
+  font-size: 16px;
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* -----------------------------
-   IMAGES INSIDE CONTENT
------------------------------- */
-.responsive-img {
+/* =========================
+   CONTENT BOXES
+========================= */
+.section {
+  background: #ffffff;
+  border: 1px solid #1e1e1e;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+/* =========================
+   LISTS
+========================= */
+ul {
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+/* =========================
+   META TEXT
+========================= */
+.meta {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   PLOTS (SUS + TASK TIME)
+========================= */
+.plot-grid {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+
+.plot-box img {
   width: 100%;
-  max-width: 600px;
-  margin: 24px 0;
-
-  border: 1px solid var(--border-main);
-  border-radius: 1px;
-  display: block;
+  height: auto;
+  border: 1px solid #1e1e1e;
+  margin-top: 12px;
 }
 
-/* -----------------------------
+/* =========================
+   TABLES (Heuristics etc.)
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th,
+td {
+  border: 1px solid #1e1e1e;
+  padding: 12px;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f5f5f5;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* =========================
    FOOTER
------------------------------- */
+========================= */
 .footer {
-  max-width: 900px;
-  margin: 100px auto 0 auto;
-  padding: 30px;
-
-  background-color: var(--box-bg);
-  border: 1px solid var(--border-main);
-  border-radius: 1px;
-
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--text-soft);
+  margin-top: 64px;
+  font-size: 13px;
+  color: #555;
 }
 
-/* -----------------------------
+/* =========================
    RESPONSIVE
------------------------------- */
-@media (max-width: 768px) {
-  body {
-    padding: 40px 14px;
+========================= */
+@media (max-width: 900px) {
+  .plot-grid {
+    flex-direction: column;
   }
 
-  .header h1 {
-    font-size: 2.2rem;
+  .navbar-inner {
+    gap: 24px;
   }
+}
 
-  .section {
-    padding: 28px;
-  }
+/* SCREENSHOT GRID */
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+}
+
+.screenshot-item img {
+  width: 100%;
+  display: block;
+  border: 1px solid #1e1e1e;
+  margin-bottom: 12px;
+}
+
+.screenshot-item h3 {
+  margin-top: 8px;
+}
+
+.screenshot-item p {
+  font-size: 14px;
+  color: #444;
 }

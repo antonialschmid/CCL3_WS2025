@@ -1,271 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Gratitude Garden – Project Documentation</title>
+    <title>Gratitude Garden – CCL3</title>
     <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 
-
 <nav class="navbar">
-    <ul class="nav-list">
-        <li><a href="#concept">Concept</a></li>
-        <li><a href="#idea">Idea & Motivation</a></li>
-        <li><a href="#implementation">Implementation</a></li>
-        <li><a href="#visuals">Visuals</a></li>
-        <li><a href="#structure">App Structure</a></li>
-        <li><a href="#tech">Technical Overview</a></li>
-        <li><a href="#usertest">User Test Plan</a></li>
-    </ul>
+    <div class="navbar-inner">
+    <a href="index.html" class="active">Summary</a>
+    <a href="app.html">App</a>
+    <a href="usability.html">Usability</a>
+    <a href="reflection.html">Reflection</a>
+    </div>
 </nav>
 
-<!-- Header -->
-<header class="header">
+<main class="page">
+
     <h1>Gratitude Garden</h1>
-    <p class="subtitle">Creative Coding Lab 3 – Winter Semester 2025</p>
-</header>
-
-<!-- Concept Section -->
-<section id="concept" class="section">
-    <h2>Concept</h2>
-    <p>
-        Gratitude Garden is a wellbeing-focused Android app that explores
-        gratitude journaling in a calm and low-pressure way. The project was
-        developed as part of Creative Coding Lab 3 and uses a single plant as
-        a visual metaphor for emotional growth and reflection.
+    <p class="meta">
+        Creative Coding Lab 3 – Winter Semester 2025<br>
+        Antonia Schmid · Kathrin Buchberger
     </p>
 
-    <p>
-        Many existing gratitude apps rely heavily on text, statistics, or
-        streak-based systems, which can feel repetitive or stressful for
-        users. Gratitude Garden takes a different approach by visualising
-        progress through the gradual growth of one plant, without creating
-        competition or performance pressure.
-    </p>
+    <!-- SUMMARY -->
+    <section class="section">
+        <h2>Project Summary</h2>
+        <p>
+            Gratitude Garden is a wellbeing-focused Android application that explores
+            gratitude journaling in a calm and non-competitive way. Instead of using
+            streaks, statistics, or performance metrics, the app visualises emotional
+            reflection through the gradual growth of a single plant.
+        </p>
+    </section>
 
-    <p>
-        Each gratitude entry contributes to the plant’s development, moving
-        through predefined growth stages over time. The focus of the app is
-        not productivity, but mindful reflection and emotional awareness.
-        The plant serves as a gentle companion that represents the user’s
-        personal gratitude journey.
-    </p>
-</section>
+    <!-- CONCEPT -->
+    <section class="section">
+        <h2>Concept</h2>
+        <p>
+            The core concept of Gratitude Garden is to represent gratitude as a slow,
+            organic process rather than a measurable achievement. Each gratitude entry
+            contributes to the growth of one plant, which evolves through predefined
+            stages over time.
+        </p>
+        <p>
+            This metaphor avoids pressure and competition and encourages mindful,
+            low-threshold reflection. The plant acts as a visual companion rather than
+            a goal to optimise.
+        </p>
+    </section>
 
-<!-- Idea & Motivation -->
-<section id="idea" class="section">
-    <h2>Idea &amp; Motivation</h2>
-    <p>
-        Many people struggle to maintain a regular gratitude journaling habit.
-        Existing solutions often feel rigid or competitive. Gratitude Garden
-        was created to allow reflection without pressure, using simple
-        visual evolution.
-    </p>
-    <p>
-        By visualising emotional progress as plant growth, the app supports
-        emotional wellbeing rather than productivity tracking. This concept
-        encourages users to reflect in a calm and aesthetic way.
-    </p>
-</section>
+    <!-- IDEA & MOTIVATION -->
+    <section class="section">
+        <h2>Idea & Motivation</h2>
+        <p>
+            Many existing gratitude apps rely heavily on text, statistics, or streaks,
+            which can feel overwhelming or discouraging. Gratitude Garden was designed
+            to support emotional wellbeing without performance pressure.
+        </p>
+        <p>
+            By focusing on calm visuals and slow progression, the app encourages users
+            to reflect at their own pace and build a sustainable habit.
+        </p>
+    </section>
 
-<!-- Implementation -->
-<section id="implementation" class="section">
-    <h2>Implementation</h2>
-    <p>
-        The app is built for the Android platform using Kotlin and follows
-        the MVVM architecture pattern. Data is stored locally via Room
-        (SQLite) to ensure privacy and usability without internet access.
-    </p>
-    <p>
-        The interface consists of a garden view with one central plant,
-        a screen to add daily entries, and a calendar view showing past
-        contributions.
-    </p>
-</section>
-
-<!-- Visuals -->
-<section id="visuals" class="section">
-    <h2>Visuals</h2>
-    <p>
-        Visual material showing sketches and screenshots related to the project.
-    </p>
-    <img src="pages/images/sketch1.png" alt="Sketch 1" class="responsive-img">
-    <img src="pages/images/screenshot1.png" alt="App Screenshot" class="responsive-img">
-</section>
-
-<!-- App Structure -->
-<section id="structure" class="section">
-    <h2>App Structure</h2>
-    <ul>
-        <li>Garden (Home Screen)</li>
-        <li>Add Entry</li>
-        <li>History / Calendar</li>
-        <li>Entry Detail</li>
-        <li>Stats / Settings</li>
-    </ul>
-    <p>
-        Navigation is simple, using a bottom navigation bar to reduce cognitive
-        load and support a calm user experience.
-    </p>
-</section>
-
-<!-- Technical Overview -->
-<section id="tech" class="section">
-    <h2>Technical Overview</h2>
-    <p>
-        The project is implemented using Kotlin (Android) with an MVVM
-        architecture, Room for local persistence, and a focus on offline-first
-        usability.
-    </p>
-    <p>
-        Data such as entries and plant stage are stored locally, preserving
-        privacy and enabling use without an internet connection.
-    </p>
-</section>
-
-<section id="usertest" class="section">
-    <h2>User Test Plan</h2>
-
-    <p>
-        To evaluate the usability and clarity of the <strong>Gratitude Garden</strong> app,
-        a structured user test plan was developed. The goal of the evaluation is to
-        identify usability issues early, assess the comprehensibility of interactions,
-        and validate design decisions.
-    </p>
-
-
-    <h3>1. Heuristic Evaluation</h3>
-    <p>
-        Before conducting user tests, a heuristic evaluation was performed on the
-        initial prototype. The evaluation was based on common usability heuristics
-        such as visibility of system status, consistency, error prevention, and user control,
-        as discussed in UEE.
-    </p>
-
-    <h4>Strengths</h4>
-    <ul>
-        <li>Clear visual hierarchy and consistent styling across screens.</li>
-        <li>Navigation structure (Garden, Add Entry, History) is easy to understand.</li>
-        <li>Visual feedback (colors, highlights, calendar dots) supports orientation.</li>
-    </ul>
-
-    <h4>Identified Usability Issues</h4>
-    <ul>
-        <li>Some interactions (e.g. date selection via calendar or month dropdown) may not be immediately obvious.</li>
-        <li>Icons without text labels rely on prior user familiarity.</li>
-        <li>The calendar view may require explanation for first-time users.</li>
-    </ul>
-
-    <p>
-        These findings informed the design of the user test tasks and research questions.
-    </p>
-
-
-    <h3>2. Initial Hypotheses &amp; Research Questions</h3>
-    <ul>
-        <li><strong>H1:</strong> Users can navigate between Garden, History, and Add Entry without external help.</li>
-        <li><strong>H2:</strong> Users understand how to add a new gratitude entry, including selecting a date and mood.</li>
-        <li><strong>H3:</strong> Users can interpret the calendar and its visual indicators (dots, colors, highlights).</li>
-    </ul>
-
-    <p>
-        Additional exploratory questions include:
-    </p>
-    <ul>
-        <li><strong>Q1:</strong> Do users understand the meaning of colored calendar days and rings?</li>
-        <li><strong>Q2:</strong> At which points do users feel uncertain or confused?</li>
-    </ul>
-
-
-    <h3>3. Data to Collect</h3>
-    <p>
-        Both quantitative and qualitative data will be collected during the usability test.
-    </p>
-
-    <h4>Quantitative Data</h4>
-    <ul>
-        <li>Task completion rate (completed / not completed)</li>
-        <li>Time on task</li>
-        <li>Number of errors or incorrect interactions</li>
-        <li>Questionnaire results (e.g. SUS or short Likert-scale questions)</li>
-    </ul>
-
-    <h4>Qualitative Data</h4>
-    <ul>
-        <li>User comments during and after tasks</li>
-        <li>Observed hesitation or confusion</li>
-        <li>Open-ended feedback on design and interaction</li>
-    </ul>
-
-
-    <h3>4. Methods, Tasks &amp; Materials</h3>
-
-    <h4>Method</h4>
-    <ul>
-        <li>Moderated usability test using the think-aloud method</li>
-        <li>Within-subject design (all participants perform the same tasks)</li>
-        <li>Small sample size suitable for early-stage design evaluation</li>
-    </ul>
-
-    <h4>Tasks</h4>
-    <ul>
-        <li>Navigate to the Garden screen and explain what is visible.</li>
-        <li>Add a new gratitude entry for today.</li>
-        <li>Change the date of an entry.</li>
-        <li>Navigate to History and find an entry from another month.</li>
-        <li>Open an existing entry and describe its content.</li>
-    </ul>
-
-    <h4>Materials</h4>
-    <ul>
-        <li>Interactive prototype / running app</li>
-        <li>SUS questionnaire</li>
-        <li>Observation notes taken by the evaluator</li>
-    </ul>
-
-
-    <h3>5. Timing &amp; Iteration</h3>
-    <p>
-        The usability test may be conducted either early during the Creative Coding Lab
-        to identify major usability issues, or later before the final presentation to
-        validate the refined design.
-    </p>
-
-    <!-- Participants -->
-    <h3>6. Participants</h3>
-    <p>
-        The test will be conducted with at least five participants. Participants are
-        young adults aged approximately 20–35 and regular smartphone users.
-        None of the participants will have prior experience with the Gratitude Garden app.
-    </p>
-
-    <!-- Procedure -->
-    <h3>7. Procedure</h3>
-    <p>
-        The usability test will be conducted as a moderated, in-person session lasting
-        approximately 10–20 minutes.
-    </p>
-    <ul>
-        <li>Introduction and consent</li>
-        <li>Execution of predefined tasks</li>
-        <li>Completion of a short questionnaire (SUS)</li>
-        <li>Open feedback discussion</li>
-    </ul>
-    <p>
-        During the test, observations will focus on task success, hesitation, errors,
-        and user comments.
-    </p>
-</section>
-
-
-<footer class="footer">
-    <p>Antonia Schmid ∙ Kathrin Buchberger ∙ CCL3 WS2025</p>
-</footer>
+</main>
 
 </body>
-
 </html>

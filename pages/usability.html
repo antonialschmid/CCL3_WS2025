@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gratitude Garden – Usability Evaluation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a href="index.html">Summary</a>
+        <a href="app.html">App</a>
+        <a href="usability.html" class="active">Usability</a>
+        <a href="reflection.html">Reflection</a>
+    </div>
+</nav>
+
+<main class="page">
+
+    <h1>Usability Evaluation</h1>
+
+    <!-- 1. USABILITY TEST PLAN -->
+    <section class="section">
+        <h2>1. Usability Test Plan</h2>
+
+        <p>
+            This evaluation assesses the effectiveness, learnability, and user satisfaction
+            of <strong>Gratitude Garden</strong>, an Android app focused on calm and reflective
+            gratitude journaling.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Verify that users can complete core workflows successfully.</li>
+            <li>Identify potential learnability issues for first-time users.</li>
+            <li>Measure perceived usability using the System Usability Scale (SUS).</li>
+            <li>Identify usability issues using Nielsen’s heuristics.</li>
+        </ul>
+
+        <h3>Approach</h3>
+        <ul>
+            <li>Heuristic evaluation of the initial prototype.</li>
+            <li>Moderated user test with task-based protocol and think-aloud method.</li>
+            <li>Post-test SUS questionnaire.</li>
+        </ul>
+    </section>
+
+    <!-- 2. HEURISTIC EVALUATION -->
+    <section class="section">
+        <h2>2. Heuristic Evaluation (Initial Prototype)</h2>
+
+        <p>
+            A heuristic evaluation was conducted on the initial prototype using common usability
+            heuristics discussed in EMH-UEE, including visibility of system status, consistency,
+            error prevention, and user control.
+        </p>
+
+        <h3>Strengths</h3>
+        <ul>
+            <li>Clear visual hierarchy and consistent styling across screens.</li>
+            <li>Navigation structure (Garden, Add Entry, History) is easy to understand.</li>
+            <li>Visual feedback (colors, highlights, calendar dots) supports orientation.</li>
+        </ul>
+
+        <h3>Identified Usability Issues</h3>
+        <ul>
+            <li>Date selection via calendar or month dropdown is not immediately obvious.</li>
+            <li>Icons without text labels rely on prior user familiarity.</li>
+            <li>The calendar visualization may require explanation for first-time users.</li>
+        </ul>
+
+        <p class="meta">
+            These findings informed the design of the user test tasks and research questions.
+        </p>
+    </section>
+
+    <!-- 3. HYPOTHESES -->
+    <section class="section">
+        <h2>3. Hypotheses & Testable Questions</h2>
+
+        <ul>
+            <li>H1: Users can navigate between Garden, History, and Add Entry without external help.</li>
+            <li>H2: Users understand how to add a new gratitude entry, including selecting date and mood.</li>
+            <li>H3: Users can correctly interpret the calendar’s visual indicators.</li>
+            <li>Q1: Do users understand the meaning of colored calendar days and rings?</li>
+            <li>Q2: Where do users feel uncertain or confused?</li>
+        </ul>
+    </section>
+
+    <!-- 4. DATA -->
+    <section class="section">
+        <h2>4. Planned Data to Collect</h2>
+
+        <h3>Quantitative</h3>
+        <ul>
+            <li>Task completion rate.</li>
+            <li>Time on task (per task).</li>
+            <li>Number of errors or incorrect interactions.</li>
+            <li>SUS questionnaire scores.</li>
+        </ul>
+
+        <h3>Qualitative</h3>
+        <ul>
+            <li>User comments during and after tasks.</li>
+            <li>Observed hesitation or confusion.</li>
+            <li>Open-ended feedback on design and interaction.</li>
+        </ul>
+    </section>
+
+    <!-- 5. METHODS -->
+    <section class="section">
+        <h2>5. Methods Used</h2>
+
+        <p>
+            The usability test was conducted as a moderated, in-person test using a think-aloud
+            protocol. All participants completed the same set of tasks (within-subject design).
+        </p>
+
+        <h3>Participants</h3>
+        <p>
+            The test was conducted with <strong>5 participants</strong>, aged approximately 20–35.
+            All participants were regular smartphone users and had no prior experience with the app.
+        </p>
+
+        <h3>Tasks</h3>
+        <ul>
+            <li>Navigate to the Garden screen and explain what is visible.</li>
+            <li>Add a new gratitude entry for today.</li>
+            <li>Change the date of an entry.</li>
+            <li>Navigate to History and find an entry from another month.</li>
+            <li>Open an existing entry and describe its content.</li>
+        </ul>
+    </section>
+
+    <!-- 6. RESULTS -->
+    <section class="section">
+        <h2>6. User Test Results</h2>
+
+        <p>
+            Overall usability was rated very highly. SUS scores ranged from 82.5 to 100,
+            indicating excellent perceived usability. Tasks were completed quickly with
+            very few errors.
+        </p>
+
+        <div class="plot-grid">
+            <div class="plot-box">
+                <img src="assets/images/sus_scores.png" alt="SUS scores per participant">
+            </div>
+
+            <div class="plot-box">
+                <img src="assets/images/task_time_avg.png" alt="Average task completion time per task">
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. FEEDBACK -->
+    <section class="section">
+        <h2>7. User Feedback & Observations</h2>
+
+        <h3>What users liked</h3>
+        <ul>
+            <li>Calm, muted color palette.</li>
+            <li>Clean and non-overwhelming design.</li>
+            <li>Clear visual structure and pleasant aesthetics.</li>
+        </ul>
+
+        <h3>Pain points</h3>
+        <ul>
+            <li>Uncertainty around mood selection and highlighting.</li>
+            <li>Some entries appeared editable when they were not.</li>
+            <li>Confusion about entry ordering.</li>
+        </ul>
+    </section>
+
+    <!-- 8. SUMMARY -->
+    <section class="section">
+        <h2>8. Summary</h2>
+
+        <p>
+            The usability evaluation indicates excellent user satisfaction and strong
+            learnability. Identified issues are minor and mostly related to visual
+            affordances rather than structural problems. Overall, the app provides a
+            calm, intuitive, and pleasant user experience.
+        </p>
+    </section>
+
+    <div class="footer">
+        Antonia Schmid ∙ Kathrin Buchberger ∙ Creative Coding Lab 3 ∙ WS 2025
+    </div>
+
+</main>
+
+</body>
+</html>
