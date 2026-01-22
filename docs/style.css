@@ -18,20 +18,11 @@ body {
 }
 
 /* =========================
-   PAGE WRAPPER
-========================= */
-.page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 20px 80px;
-}
-
-/* =========================
    NAVBAR
 ========================= */
 .navbar {
-  background: #EEEFE9;
   border-bottom: 1px solid #1e1e1e;
+  background: #EEEFE9;
 }
 
 .navbar-inner {
@@ -53,6 +44,15 @@ body {
 }
 
 /* =========================
+   PAGE WRAPPER
+========================= */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+/* =========================
    HEADINGS
 ========================= */
 h1 {
@@ -66,80 +66,122 @@ h2 {
 }
 
 h3 {
-  font-size: 16px;
+  font-size: 15px;
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 /* =========================
-   CONTENT BOXES
+   MAIN CONTENT BOX
+   (used everywhere)
 ========================= */
-.section {
+.section,
+.content-box {
   background: #ffffff;
   border: 1px solid #1e1e1e;
-  padding: 24px;
-  margin-bottom: 32px;
+  padding: 32px;
+  margin-bottom: 48px;
 }
 
 /* =========================
-   LISTS
+   TEXT ELEMENTS
 ========================= */
+p {
+  margin-bottom: 16px;
+}
+
 ul {
   padding-left: 18px;
+  margin-bottom: 16px;
 }
 
 li {
   margin-bottom: 6px;
 }
 
-/* =========================
-   META TEXT
-========================= */
 .meta {
-  font-size: 14px;
+  font-size: 13px;
   color: #555;
-  margin-bottom: 16px;
+  margin-top: 8px;
 }
 
 /* =========================
-   PLOTS (SUS + TASK TIME)
+   IMAGES – GENERAL
+========================= */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================
+   SINGLE IMAGE / GRAPH
+========================= */
+.figure {
+  margin: 32px 0;
+  text-align: center;
+}
+
+.figure img {
+  width: 520px;
+  max-width: 100%;
+  margin: 0 auto;
+  border: 1px solid #1e1e1e;
+  background: #ffffff;
+}
+
+.figure-caption {
+  font-size: 13px;
+  color: #555;
+  margin-top: 8px;
+}
+
+/* =========================
+   IMAGE GRIDS (APP SCREENSHOTS)
+========================= */
+
+/* 3 screenshots in a row */
+.image-grid-3 {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 32px 0 24px;
+}
+
+/* 2 screenshots in a row */
+.image-grid-2 {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+/* SAME SIZE for ALL screenshots */
+.image-grid-3 img,
+.image-grid-2 img {
+  width: 240px;
+  max-width: 100%;
+  border: 1px solid #1e1e1e;
+  background: #ffffff;
+}
+
+/* =========================
+   PLOTS (USABILITY)
 ========================= */
 .plot-grid {
   display: flex;
   gap: 32px;
-  margin-top: 24px;
+  margin-top: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
-
 
 .plot-box img {
-  width: 100%;
-  height: auto;
+  width: 420px;
+  max-width: 100%;
   border: 1px solid #1e1e1e;
-  margin-top: 12px;
-}
-
-/* =========================
-   TABLES (Heuristics etc.)
-========================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-}
-
-th,
-td {
-  border: 1px solid #1e1e1e;
-  padding: 12px;
-  vertical-align: top;
-  font-size: 14px;
-}
-
-th {
-  background-color: #f5f5f5;
-  text-align: left;
-  font-weight: 600;
+  background: #ffffff;
 }
 
 /* =========================
@@ -149,40 +191,37 @@ th {
   margin-top: 64px;
   font-size: 13px;
   color: #555;
+  text-align: center;
 }
 
 /* =========================
-   RESPONSIVE
+   MOBILE
 ========================= */
 @media (max-width: 900px) {
+  .image-grid-3,
+  .image-grid-2,
   .plot-grid {
     flex-direction: column;
+    align-items: center;
   }
 
-  .navbar-inner {
-    gap: 24px;
+  .image-grid-3 img,
+  .image-grid-2 img,
+  .plot-box img {
+    width: 100%;
+    max-width: 360px;
   }
 }
 
-/* SCREENSHOT GRID */
-.screenshot-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 32px;
+a {
+  color: #1e1e1e;
+  text-decoration: underline;
 }
 
-.screenshot-item img {
-  width: 100%;
-  display: block;
-  border: 1px solid #1e1e1e;
-  margin-bottom: 12px;
+a:visited {
+  color: #1e1e1e;
 }
 
-.screenshot-item h3 {
-  margin-top: 8px;
-}
-
-.screenshot-item p {
-  font-size: 14px;
-  color: #444;
+a:hover {
+  opacity: 0.7;
 }
