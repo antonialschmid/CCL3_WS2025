@@ -43,65 +43,68 @@ fun HistoryScreen(
     val entries by viewModel.entries.collectAsState()
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(AppBackground)
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "History",
-            style = MaterialTheme.typography.headlineMedium,
-            color = TextPrimary
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        MonthSelector(
-            currentMonth = currentMonth,
-            onMonthChange = { currentMonth = it }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CalendarBox(
-            month = currentMonth,
-            entries = entries,
-            onDayClick = { entry ->
-                navController.navigate("detail/${entry.id}")
-            }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Previous entries",
-            style = MaterialTheme.typography.titleLarge,
-            color = TextPrimary
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        if (entries.isEmpty()) {
             Text(
-                text = "No entries yet",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "History",
+                style = MaterialTheme.typography.headlineMedium,
                 color = TextPrimary
             )
+        }
+
+        item {
+            MonthSelector(
+                currentMonth = currentMonth,
+                onMonthChange = { currentMonth = it }
+            )
+        }
+
+        item {
+            CalendarBox(
+                month = currentMonth,
+                entries = entries,
+                onDayClick = { entry ->
+                    navController.navigate("detail/${entry.id}")
+                }
+            )
+        }
+
+        item {
+            Text(
+                text = "Previous entries",
+                style = MaterialTheme.typography.titleLarge,
+                color = TextPrimary
+            )
+        }
+
+        if (entries.isEmpty()) {
+            item {
+                Text(
+                    text = "No entries yet",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextPrimary
+                )
+            }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(entries) { entry ->
-                    HistoryItem(entry) {
-                        navController.navigate("detail/${entry.id}")
-                    }
+            items(entries) { entry ->
+                HistoryItem(entry) {
+                    navController.navigate("detail/${entry.id}")
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 
@@ -226,6 +229,7 @@ fun CalendarBox(
         Spacer(modifier = Modifier.height(8.dp))
 
         LazyVerticalGrid(
+            modifier = Modifier.heightIn(max = 300.dp),
             columns = GridCells.Fixed(7),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)

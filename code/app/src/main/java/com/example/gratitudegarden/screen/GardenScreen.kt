@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -75,6 +77,7 @@ fun GardenScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -266,10 +269,10 @@ fun MonthlyDotsCircle(
 @Composable
 fun PlantStageImage(totalEntries: Int) {
     val stageRes = when {
-        totalEntries < 0 -> R.drawable.plant_stage_1
-        totalEntries < 1 -> R.drawable.plant_stage_2
-        totalEntries < 2 -> R.drawable.plant_stage_3
-        totalEntries < 3 -> R.drawable.plant_stage_4
+        totalEntries < 1 -> R.drawable.plant_stage_1
+        totalEntries < 3 -> R.drawable.plant_stage_2
+        totalEntries < 6 -> R.drawable.plant_stage_3
+        totalEntries < 12 -> R.drawable.plant_stage_4
         else -> R.drawable.plant_stage_5
     }
 
