@@ -46,7 +46,7 @@ fun DetailEntryScreen(
         )
     }
     var showDatePicker by remember { mutableStateOf(false) }
-
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
     Scaffold(
@@ -238,13 +238,51 @@ fun DetailEntryScreen(
                 text = "Delete",
                 background = MoodHappy,
                 onClick = {
-                    viewModel.deleteEntry(entry)
-                    navController.popBackStack()
+                    showDeleteDialog = true
                 }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            containerColor = CardBackground,
+            title = {
+                Text(
+                    text = "Delete entry?",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TextPrimary
+                )
+            },
+            text = {
+                Text(
+                    text = "This entry will be permanently deleted. This action cannot be undone.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextSecondary
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteEntry(entry)
+                        showDeleteDialog = false
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("Delete", color = MoodHappy)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("Cancel", color = TextPrimary)
+                }
+            }
+        )
     }
 
     if (showDatePicker) {
