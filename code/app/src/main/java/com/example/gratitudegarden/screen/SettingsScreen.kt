@@ -2,11 +2,13 @@ package com.example.gratitudegarden.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.SentimentSatisfied
@@ -33,8 +35,8 @@ fun SettingsScreen(
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val entries by viewModel.entries.collectAsState()
-    val totalEntries = entries.size
 
+    val totalEntries = entries.size
     val today = LocalDate.now()
     val startOfWeek = today.minusDays(6)
 
@@ -70,6 +72,10 @@ fun SettingsScreen(
             ?.replaceFirstChar { it.uppercase() }
             ?: "—"
 
+    var notificationsEnabled by remember {
+        mutableStateOf(NotificationPrefs.isEnabled(context))
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,104 +83,90 @@ fun SettingsScreen(
             .padding(24.dp)
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.headlineMedium,
-                color = TextPrimary
-            )
-        }
+        Text(
+            text = "Settings",
+            style = MaterialTheme.typography.headlineMedium,
+            color = TextPrimary
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        StatCard(
-            title = "Total Entries",
-            value = totalEntries.toString(),
-            icon = Icons.Default.ShowChart
-        )
-
-        StatCard(
-            title = "This Week",
-            value = entriesThisWeek.toString(),
-            icon = Icons.Default.CalendarToday
-        )
-
-        StatCard(
-            title = "Current Streak",
-            value = currentStreak.toString(),
-            icon = Icons.Default.EmojiEvents
-        )
-
-        StatCard(
-            title = "Common Mood",
-            value = mostCommonMood,
-            icon = Icons.Default.SentimentSatisfied
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
         Text(
-            text = "Settings",
+            text = "Your stats",
             style = MaterialTheme.typography.titleMedium,
             color = TextPrimary
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        var notificationsEnabled by remember { mutableStateOf(false) }
+        StatCard("Total Entries", totalEntries.toString(), Icons.Default.ShowChart)
+        StatCard("This Week", entriesThisWeek.toString(), Icons.Default.CalendarToday)
+        StatCard("Current Streak", currentStreak.toString(), Icons.Default.EmojiEvents)
+        StatCard("Common Mood", mostCommonMood, Icons.Default.SentimentSatisfied)
 
-        SettingRow(
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "Preferences",
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        SettingSwitchRow(
             title = "Notifications",
-            subtitle = "Daily reminders",
-            trailing = {
-                Box(
-                    modifier = Modifier
-                        .background(CardBackground, RectangleShape)
-                        .padding(horizontal = 6.dp, vertical = 4.dp)
-                ) {
-                    Switch(
-                        checked = notificationsEnabled,
-                        onCheckedChange = {
-                            notificationsEnabled = it
-                            NotificationPrefs.setEnabled(context, it)
+            subtitle = "Daily gratitude reminders",
+            checked = notificationsEnabled,
+            onCheckedChange = {
+                notificationsEnabled = it
+                NotificationPrefs.setEnabled(context, it)
 
-                            if (it) {
-                                NotificationScheduler.scheduleDaily(context)
-                            } else {
-                                NotificationScheduler.cancel(context)
-                            }
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = TextPrimary,
-                            checkedTrackColor = MoodPeaceful,
-                            uncheckedThumbColor = TextPrimary,
-                            uncheckedTrackColor = CardBackground
-                        )
-                    )
+                if (it) {
+                    NotificationScheduler.scheduleDaily(context)
+                } else {
+                    NotificationScheduler.cancel(context)
                 }
             }
         )
 
-        SettingRow(
-            title = "About",
-            subtitle = "Version 1.0",
-            trailing = {}
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "About",
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
         )
 
-        SettingRow(
-            title = "Privacy Policy",
-            subtitle = "How we protect your data",
-            trailing = {}
+        Spacer(modifier = Modifier.height(12.dp))
+
+        var showAboutDialog by remember { mutableStateOf(false) }
+        var showPrivacyDialog by remember { mutableStateOf(false) }
+
+        SettingNavRow(
+            title = "About Gratitude Garden",
+            subtitle = "App information & concept",
+            onClick = { showAboutDialog = true }
         )
+
+        SettingNavRow(
+            title = "Privacy",
+            subtitle = "How your data is handled",
+            onClick = { showPrivacyDialog = true }
+        )
+
+        if (showAboutDialog) {
+            AboutDialog(onDismiss = { showAboutDialog = false })
+        }
+
+        if (showPrivacyDialog) {
+            PrivacyDialog(onDismiss = { showPrivacyDialog = false })
+        }
     }
 }
 
 @Composable
-fun StatCard(
+private fun StatCard(
     title: String,
     value: String,
     icon: ImageVector
@@ -184,28 +176,51 @@ fun StatCard(
             .fillMaxWidth()
             .border(1.dp, TextPrimary, RectangleShape)
             .background(CardBackground, RectangleShape)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelSmall,
-                color = TextSecondary
-            )
+            Text(title, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.headlineSmall,
-                color = TextPrimary
-            )
+            Text(value, style = MaterialTheme.typography.headlineSmall, color = TextPrimary)
+        }
+        Icon(icon, contentDescription = null, tint = TextPrimary)
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+private fun SettingSwitchRow(
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = TextPrimary)
+            Text(subtitle, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
         }
 
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = TextPrimary
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = TextPrimary,
+                checkedTrackColor = MoodPeaceful,
+                uncheckedThumbColor = TextPrimary,
+                uncheckedTrackColor = CardBackground
+            )
         )
     }
 
@@ -213,17 +228,18 @@ fun StatCard(
 }
 
 @Composable
-fun SettingRow(
+private fun SettingNavRow(
     title: String,
     subtitle: String,
-    trailing: @Composable () -> Unit
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, TextPrimary, RectangleShape)
             .background(CardBackground, RectangleShape)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .clickable { onClick() }
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -233,7 +249,6 @@ fun SettingRow(
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextPrimary
             )
-            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.labelSmall,
@@ -241,8 +256,101 @@ fun SettingRow(
             )
         }
 
-        trailing()
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
+            tint = TextSecondary
+        )
     }
 
     Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+private fun SettingInfoRow(
+    title: String,
+    subtitle: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, TextPrimary, RectangleShape)
+            .background(CardBackground, RectangleShape)
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+private fun AboutDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK", color = TextPrimary)
+            }
+        },
+        title = {
+            Text(
+                text = "About Gratitude Garden",
+                style = MaterialTheme.typography.titleMedium,
+                color = TextPrimary
+            )
+        },
+        text = {
+            Text(
+                text =
+                    "Gratitude Garden is a wellbeing app designed to encourage daily reflection and gratitude.\n\n" +
+                            "Each entry contributes to the growth of your virtual plant, reinforcing positive habits through calm visual feedback.\n\n" +
+                            "Developed as part of Creative Code Lab 3.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary
+            )
+        },
+        containerColor = CardBackground
+    )
+}
+
+@Composable
+private fun PrivacyDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK", color = TextPrimary)
+            }
+        },
+        title = {
+            Text(
+                text = "Privacy",
+                style = MaterialTheme.typography.titleMedium,
+                color = TextPrimary
+            )
+        },
+        text = {
+            Text(
+                text =
+                    "All data entered in Gratitude Garden is stored locally on your device.\n\n" +
+                            "No personal information is collected, transmitted, or shared with third parties.\n\n" +
+                            "Notifications, if enabled, are handled entirely on-device.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary
+            )
+        },
+        containerColor = CardBackground
+    )
 }
