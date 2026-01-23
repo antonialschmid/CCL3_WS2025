@@ -39,11 +39,16 @@ fun GardenScreen(
     viewModel: AddEntryViewModel
 ) {
     val entries by viewModel.entries.collectAsState()
-    val entryCount = entries.size
 
     var selectedMonth by remember {
         mutableStateOf(java.time.YearMonth.now())
     }
+
+    val monthEntries = remember(entries, selectedMonth) {
+        entriesInMonth(entries, selectedMonth)
+    }
+
+    val entryCount = monthEntries.size
 
     Scaffold(
         containerColor = AppBackground,
@@ -157,7 +162,7 @@ fun GardenScreen(
                 ) {
                     MonthlyDotsCircle(
                         month = selectedMonth,
-                        entries = entries,
+                        entries = monthEntries,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -167,7 +172,10 @@ fun GardenScreen(
             Spacer(modifier = Modifier.height(100.dp))
 
             Text(
-                text = "Your plant is starting to grow. Keep nurturing it.",
+                text = when (entryCount) {
+                    0 -> "A new month, a new seed. Add your first gratitude."
+                    else -> "Your plant is growing this month. Keep nurturing it."
+                },
                 color = TextSecondary,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 24.dp)
@@ -283,3 +291,16 @@ fun PlantStageImage(totalEntries: Int) {
     )
 }
 
+private fun entriesInMonth(
+    entries: List<GratitudeEntry>,
+    month: java.time.YearMonth
+): List<GratitudeEntry> {
+    return entries.filter {
+        Instant.ofEpochMilli(it.timestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .let { date ->
+                date.year == month.year && date.month == month.month
+            }
+    }
+}
