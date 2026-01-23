@@ -19,10 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
-import com.example.gratitudegarden.notifications.NotificationPrefs
-import com.example.gratitudegarden.notifications.NotificationScheduler
 import com.example.gratitudegarden.ui.theme.*
 import java.time.Instant
 import java.time.LocalDate
@@ -30,10 +27,8 @@ import java.time.ZoneId
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
     viewModel: AddEntryViewModel
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
     val entries by viewModel.entries.collectAsState()
 
     val totalEntries = entries.size
@@ -72,10 +67,6 @@ fun SettingsScreen(
             ?.replaceFirstChar { it.uppercase() }
             ?: "—"
 
-    var notificationsEnabled by remember {
-        mutableStateOf(NotificationPrefs.isEnabled(context))
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,32 +96,6 @@ fun SettingsScreen(
         StatCard("Common Mood", mostCommonMood, Icons.Default.SentimentSatisfied)
 
         Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = "Preferences",
-            style = MaterialTheme.typography.titleMedium,
-            color = TextPrimary
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        SettingSwitchRow(
-            title = "Notifications",
-            subtitle = "Daily gratitude reminders",
-            checked = notificationsEnabled,
-            onCheckedChange = {
-                notificationsEnabled = it
-                NotificationPrefs.setEnabled(context, it)
-
-                if (it) {
-                    NotificationScheduler.scheduleDaily(context)
-                } else {
-                    NotificationScheduler.cancel(context)
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "About",
@@ -261,35 +226,6 @@ private fun SettingNavRow(
             contentDescription = null,
             tint = TextSecondary
         )
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-}
-
-@Composable
-private fun SettingInfoRow(
-    title: String,
-    subtitle: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, TextPrimary, RectangleShape)
-            .background(CardBackground, RectangleShape)
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextPrimary
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelSmall,
-                color = TextSecondary
-            )
-        }
     }
 
     Spacer(modifier = Modifier.height(8.dp))

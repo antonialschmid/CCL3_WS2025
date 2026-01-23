@@ -53,7 +53,11 @@ fun AddEntryScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        if (navController.currentBackStackEntry?.destination?.route == "addEntry") {
+                            navController.popBackStack()
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",

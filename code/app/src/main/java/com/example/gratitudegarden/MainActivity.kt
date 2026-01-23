@@ -112,7 +112,6 @@ fun AppNavigation() {
 
             composable("settings") {
                 SettingsScreen(
-                    navController = navController,
                     viewModel = addEntryViewModel
                 )
             }

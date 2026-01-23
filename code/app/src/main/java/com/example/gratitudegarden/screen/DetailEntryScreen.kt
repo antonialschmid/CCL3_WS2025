@@ -73,7 +73,12 @@ fun DetailEntryScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        if (navController.currentBackStackEntry?.destination?.route
+                            ?.startsWith("detail/") == true) {
+                            navController.popBackStack()
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
