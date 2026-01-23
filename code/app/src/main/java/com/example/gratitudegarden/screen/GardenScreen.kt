@@ -147,18 +147,23 @@ fun GardenScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(400.dp)
-                    .padding(top = 100.dp)
+                    .clickable {
+                        navController.navigate("history") {
+                            popUpTo("garden")
+                            launchSingleTop = true
+                        }
+                    }
             ) {
 
                 Box(
                     modifier = Modifier.size(180.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     MonthlyDotsCircle(
                         month = selectedMonth,
@@ -169,7 +174,7 @@ fun GardenScreen(
                 PlantStageImage(totalEntries = entryCount)
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             Text(
                 text = when (entryCount) {
@@ -287,7 +292,8 @@ fun PlantStageImage(totalEntries: Int) {
     Image(
         painter = painterResource(stageRes),
         contentDescription = "Plant growth stage",
-        modifier = Modifier.size(280.dp)
+        modifier = Modifier
+            .size(280.dp)
     )
 }
 
