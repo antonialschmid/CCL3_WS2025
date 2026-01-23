@@ -202,11 +202,17 @@ fun DetailEntryScreen(
                         else
                             moodColor(mood).copy(alpha = 0.2f)
 
+                    val fg =
+                        if (selectedMood == mood)
+                            TextPrimary
+                        else
+                            TextPrimary.copy(alpha = 0.5f)
+
                     Column(
                         modifier = Modifier
                             .weight(1f)
                             .background(bg, RectangleShape)
-                            .border(1.dp, TextPrimary, RectangleShape)
+                            .border(1.dp, fg, RectangleShape)
                             .clickable(enabled = isEditing) {
                                 selectedMood = mood
                             }
@@ -216,7 +222,7 @@ fun DetailEntryScreen(
                         Icon(
                             painter = painterResource(id = moodIcon(mood)),
                             contentDescription = mood.name,
-                            tint = TextPrimary,
+                            tint = fg,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
@@ -224,7 +230,7 @@ fun DetailEntryScreen(
                             text = mood.name.lowercase()
                                 .replaceFirstChar { it.uppercase() },
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextPrimary
+                            color = fg
                         )
                     }
                 }
