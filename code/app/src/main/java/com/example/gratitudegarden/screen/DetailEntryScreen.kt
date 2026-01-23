@@ -49,6 +49,17 @@ fun DetailEntryScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
+    val allEntries by viewModel.entries.collectAsState()
+
+    val sortedEntries = remember(allEntries) {
+        allEntries.sortedByDescending { it.timestamp }
+    }
+
+    val currentIndex = sortedEntries.indexOfFirst { it.id == entry.id }
+
+    val hasPrevious = currentIndex < sortedEntries.lastIndex
+    val hasNext = currentIndex > 0
+
     Scaffold(
         containerColor = AppBackground,
         topBar = {
@@ -98,13 +109,18 @@ fun DetailEntryScreen(
 
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "Previous day",
+                    contentDescription = "Previous entry",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable(enabled = isEditing) {
-                            selectedDate = selectedDate.minusDays(1)
+                        .clickable(
+                            enabled = !isEditing && hasPrevious
+                        ) {
+                            val prevEntry = sortedEntries[currentIndex + 1]
+                            navController.navigate("detail/${prevEntry.id}") {
+                                popUpTo("detail/${entry.id}") { inclusive = true }
+                            }
                         },
-                    tint = TextPrimary
+                    tint = if (!isEditing && hasPrevious) TextPrimary else TextSecondary
                 )
 
                 Box(
@@ -122,13 +138,18 @@ fun DetailEntryScreen(
 
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Next day",
+                    contentDescription = "Next entry",
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable(enabled = isEditing) {
-                            selectedDate = selectedDate.plusDays(1)
+                        .clickable(
+                            enabled = !isEditing && hasNext
+                        ) {
+                            val nextEntry = sortedEntries[currentIndex - 1]
+                            navController.navigate("detail/${nextEntry.id}") {
+                                popUpTo("detail/${entry.id}") { inclusive = true }
+                            }
                         },
-                    tint = TextPrimary
+                    tint = if (!isEditing && hasNext) TextPrimary else TextSecondary
                 )
             }
 
