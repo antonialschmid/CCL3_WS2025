@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,13 +28,12 @@ import com.example.gratitudegarden.data.model.GratitudeEntry
 import com.example.gratitudegarden.data.model.Mood
 import com.example.gratitudegarden.data.viewmodel.AddEntryViewModel
 import com.example.gratitudegarden.ui.theme.*
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.Month
-import java.util.*
+import com.example.gratitudegarden.R
 
 @Composable
 fun HistoryScreen(
@@ -79,6 +79,8 @@ fun HistoryScreen(
         }
 
         item {
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "Previous entries",
                 style = MaterialTheme.typography.titleLarge,
@@ -299,35 +301,44 @@ fun HistoryItem(
     entry: GratitudeEntry,
     onClick: () -> Unit
 ) {
-    val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-        .format(Date(entry.timestamp))
+    val mood = Mood.valueOf(entry.mood)
 
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(CardBackground, RectangleShape)
             .border(1.dp, TextPrimary, RectangleShape)
             .clickable { onClick() }
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = date,
-            style = MaterialTheme.typography.bodySmall,
-            color = TextPrimary
-        )
-        Spacer(modifier = Modifier.height(4.dp))
+
         Text(
             text = entry.text,
+            modifier = Modifier.weight(1f),
             maxLines = 2,
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = entry.mood,
-            style = MaterialTheme.typography.labelSmall,
-            color = TextPrimary
-        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .background(
+                    color = moodColor(mood),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = moodIcon(mood)),
+                contentDescription = mood.name,
+                tint = Color.Black.copy(alpha = 0.75f),
+                modifier = Modifier.size(18.dp)
+            )
+        }
     }
 }
 
@@ -357,3 +368,12 @@ private fun groupEntriesByDate(
         .toSortedMap(compareByDescending { it })
         .map { it.key to it.value }
 }
+
+private fun moodIcon(mood: Mood): Int =
+    when (mood) {
+        Mood.HAPPY -> R.drawable.ic_mood_happy
+        Mood.PEACEFUL -> R.drawable.ic_mood_peaceful
+        Mood.GRATEFUL -> R.drawable.ic_mood_grateful
+        Mood.HOPEFUL -> R.drawable.ic_mood_hopeful
+        Mood.CALM -> R.drawable.ic_mood_content
+    }
