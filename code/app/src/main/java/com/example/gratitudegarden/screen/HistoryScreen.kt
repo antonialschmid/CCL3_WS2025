@@ -86,7 +86,9 @@ fun HistoryScreen(
             )
         }
 
-        if (entries.isEmpty()) {
+        val groupedEntries = groupEntriesByDate(entries)
+
+        if (groupedEntries.isEmpty()) {
             item {
                 Text(
                     text = "No entries yet",
@@ -95,9 +97,23 @@ fun HistoryScreen(
                 )
             }
         } else {
-            items(entries) { entry ->
-                HistoryItem(entry) {
-                    navController.navigate("detail/${entry.id}")
+            groupedEntries.forEach { (date, dayEntries) ->
+
+                item {
+                    Text(
+                        text = date.format(
+                            java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary,
+                        modifier = Modifier.padding(top = 12.dp, bottom = 0.2.dp)
+                    )
+                }
+
+                items(dayEntries) { entry ->
+                    HistoryItem(entry) {
+                        navController.navigate("detail/${entry.id}")
+                    }
                 }
             }
         }
@@ -325,4 +341,19 @@ private fun daysInMonth(month: YearMonth): List<LocalDate?> {
         days.add(month.atDay(day + 1))
     }
     return days
+}
+
+private fun groupEntriesByDate(
+    entries: List<GratitudeEntry>
+): List<Pair<LocalDate, List<GratitudeEntry>>> {
+
+    return entries
+        .sortedByDescending { it.timestamp }
+        .groupBy {
+            Instant.ofEpochMilli(it.timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        }
+        .toSortedMap(compareByDescending { it })
+        .map { it.key to it.value }
 }
