@@ -45,6 +45,24 @@
             <li>Settings</li>
         </ul>
 
+        <h2>User Flow</h2>
+        <p>
+
+            The following screenshots represent the final high-fidelity implementation of Gratitude Garden and reflect the intended user flow of the application.
+        </p>
+        <p>
+            The core user flow starts on the Garden (Home) screen, which visualizes the user’s overall gratitude progress through the growing plant. From there, users can:</br>
+            </p>
+        <p>
+            1.	Navigate to Add Entry to create a new gratitude entry by writing a short text, selecting a mood, and choosing a date.</br>
+            2.	Use the History / Calendar view to browse past entries by month and day.</br>
+            3.	Open an Entry Detail screen to read and edit an existing entry.</br>
+            4.	Access Settings for basic app configuration.
+        </p>
+        <p>
+            The navigation structure is intentionally simple and consistent to support a calm, low-pressure user experience and to minimize cognitive load for first-time users.
+        </p>
+
         <h2>Screenshots</h2>
 
         <!-- ROW 1: THREE IMAGES -->
@@ -59,6 +77,47 @@
             <img src="assets/images/edit_entry.png" alt="Edit Entry Screen">
             <img src="assets/images/settings.png" alt="Settings Screen">
         </div>
+
+        <h2>SQLite Database Design (ERD)</h2>
+
+        <table class="erd-table">
+            <thead>
+            <tr>
+                <th>Entity</th>
+                <th>Attribute</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td rowspan="4"><strong>GratitudeEntry</strong></td>
+                <td>id</td>
+                <td>Integer (PK)</td>
+                <td>Unique identifier for each entry</td>
+            </tr>
+            <tr>
+                <td>text</td>
+                <td>String</td>
+                <td>Gratitude text written by the user</td>
+            </tr>
+            <tr>
+                <td>mood</td>
+                <td>String</td>
+                <td>Selected mood (e.g. Happy, Calm, Grateful)</td>
+            </tr>
+            <tr>
+                <td>timestamp</td>
+                <td>Long</td>
+                <td>Date of the entry stored as Unix timestamp</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="meta">
+            The database uses a single entity to keep the data model simple and
+            fully supports offline-first CRUD operations.
+        </p>
 
     </div>
 
