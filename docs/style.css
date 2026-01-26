@@ -226,23 +226,3 @@ a:hover {
   opacity: 0.7;
 }
 
-/* ERD TABLE */
-.erd-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 24px;
-  font-size: 14px;
-}
-
-.erd-table th,
-.erd-table td {
-  border: 1px solid #1e1e1e;
-  padding: 12px;
-  vertical-align: top;
-  text-align: left;
-}
-
-.erd-table th {
-  background: #f5f5f5;
-  font-weight: 600;
-}

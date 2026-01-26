@@ -80,39 +80,7 @@
 
         <h2>SQLite Database Design (ERD)</h2>
 
-        <table class="erd-table">
-            <thead>
-            <tr>
-                <th>Entity</th>
-                <th>Attribute</th>
-                <th>Type</th>
-                <th>Description</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td rowspan="4"><strong>GratitudeEntry</strong></td>
-                <td>id</td>
-                <td>Integer (PK)</td>
-                <td>Unique identifier for each entry</td>
-            </tr>
-            <tr>
-                <td>text</td>
-                <td>String</td>
-                <td>Gratitude text written by the user</td>
-            </tr>
-            <tr>
-                <td>mood</td>
-                <td>String</td>
-                <td>Selected mood (e.g. Happy, Calm, Grateful)</td>
-            </tr>
-            <tr>
-                <td>timestamp</td>
-                <td>Long</td>
-                <td>Date of the entry stored as Unix timestamp</td>
-            </tr>
-            </tbody>
-        </table>
+        <img src="assets/images/ERD.png" alt="ERD">
 
         <p class="meta">
             The database uses a single entity to keep the data model simple and
